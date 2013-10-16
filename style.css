@@ -11,3 +11,45 @@
 	column-count:3;
 	-webkit-column-count: 3;
 }
+
+.hall {
+	overflow: hidden;
+	margin: 5px;
+	background: #f8f8f8;
+}
+
+.hall p {
+	margin: 0;
+	padding: 0;
+}
+
+.hall .menu {
+	font-size: 50%;
+}
+
+.hall .hall-header {
+	position: relative;
+	background-color: #e0e0e0;
+	padding: 5px;
+}
+.hall.hall-status-booked .hall-header{
+	overflow: hidden;
+	background-color: #c0e0c0;
+}
+.hall.hall-status-closed .hall-header{
+	overflow: hidden;
+	background-color: #e0c0c0;
+}
+.hall.hall-status-open .hall-header{
+	overflow: hidden;
+	background-color: #e0e0c0;
+}
+
+.hall .hall-header .progress {
+	position: absolute;
+	right: 0;
+	top:0;
+	background: rgba(255, 255, 255, 0.5);
+	height: 100%;
+	text-align: right;
+}

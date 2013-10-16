@@ -58,6 +58,7 @@ HallSummary.prototype.toString = function() {
 }
 HallSummary.prototype.loadMenu = function() {
 	var d = $.Deferred();
+	var self = this;
 	$.get(root, {
 		'event': this.type.id,
 		'date': this.date.toISOString().substring(0, 10)
@@ -65,13 +66,18 @@ HallSummary.prototype.loadMenu = function() {
 		var $doc = $(data);
 		var $doc = $(data);
 
-		var menu = $doc.find('.menu');
-		if(menu.size())
-			return d.resolve(menu);
-
 		var error = $doc.find('.error');
 		if(error.size())
 			return d.reject(error);
+
+		var menu = $doc.find('.menu');
+		if(menu.size()) {
+			self.menu = menu;
+			return d.resolve();
+		}
+		else
+			return d.resolve();
+
 	}).fail(d.reject);
 
 	return d.promise();
@@ -107,6 +113,7 @@ HallSummary.loadAllOfType = function(type) {
 			}
 
 			var parseStatus = function(summary, str) {
+				str = str.trim();
 				if(str == '(signup deadline has passed)')
 					summary.status = 'closed';
 				else if(str == '(signup has not yet opened)')
@@ -169,23 +176,6 @@ var types = [
 $(function() {
 	console.log("Hello World");
 
-	if(location.pathname == '/menus') {
-		$('body').empty();
-
-		for(i in types) {
-			(function(i, t) {
-				getFormal(t, new Date()).then(function(menu) {
-					console.log(menu);
-					$('body').append(i);
-					$('body').append(menu);
-				}).fail(function(reason) {
-					console.log(reason);
-					$('body').append(i);
-					$('body').append(reason)
-				});
-			})(i, types[i]);
-		}
-	}
 	if(location.pathname == '/summary') {
 		$('body').empty();
 
@@ -197,24 +187,34 @@ $(function() {
 			})
 		});
 	}
-	if(location.pathname == '/menus/first') {
+
+	if(location.pathname == '/menus') {
 		$('body').empty();
 
-		var today = new Date();
+		HallSummary.loadAll().done(function(all) {
+			all.sortBy(function(s) { return s.date });
+			all.forEach(function(s) {
+				console.log(s);
+				var d = $('<div>')
+					.addClass('hall')
+					.addClass('hall-status-'+s.status)
+					.css({overflow: 'hidden'})
+					.append(
+						$('<div>')
+							.addClass('hall-header')
+							.append(
+								$('<div>')
+									.addClass('progress')
+									.css('width', 100 * s.available/s.capacity + '%'),
+								$('<p>').text(s.toString())
+							)
+					)
+					.appendTo('body');
 
-
-		Array.range(5).map(function(n) {
-			var date = today.clone();
-			date.setDate(today.getDate() + n);
-
-			return getHall(types.FIRST, date)
-				.then(function(menu) {
-					console.log(menu);
-					$('body').append(menu);
+				s.loadMenu().done(function() {
+					if(s.menu) s.menu.appendTo(d);
 				})
-				.fail(function(reason) {
-					$('body').append(reason)
-				});
+			})
 		});
 	}
 });
