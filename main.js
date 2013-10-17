@@ -1,35 +1,38 @@
 // Utility functions
 (function() {
-	Array.range = function(n) {
-		var a = new Array(n);
-		for(var i = 0; i < n; i++) a[i] = i;
-		return a;
-	};
-
-	Object.defineProperty(Array.prototype, 'sortBy', {
-		value: function(f) {
-			this.sort(function(a, b) {
-				var fa = f(a), fb = f(b);
-				if(fa < fb) return -1;
-				if(fa > fb) return 1;
-				return 0;
-			});
+	Date.extend({
+		toISODateString: function() { return this.toISOString().substring(0, 10); },
+		toLocalISODateString: function() { return this.toLocalISOString().substring(0, 10); },
+		toLocalISOString: function() {
+			function pad(n) { return n < 10 ? '0' + n : n }
+			var localIsoString = this.getFullYear() + '-'
+				+ pad(this.getMonth() + 1) + '-'
+				+ pad(this.getDate()) + 'T'
+				+ pad(this.getHours()) + ':'
+				+ pad(this.getMinutes()) + ':'
+				+ pad(this.getSeconds());
+			if(this.getTimezoneOffset() == 0) localIsoString += 'Z';
+			return localIsoString;
 		}
 	});
-	Date.prototype.clone = function() { return new Date(this.getTime()); };
-	Date.prototype.toISODateString = function() { return this.toISOString().substring(0, 10); };
-	Date.prototype.toLocalISODateString = function() { return this.toLocalISOString().substring(0, 10); };
-	Date.prototype.toLocalISOString = function() {
-		function pad(n) { return n < 10 ? '0' + n : n }
-		var localIsoString = this.getFullYear() + '-'
-			+ pad(this.getMonth() + 1) + '-'
-			+ pad(this.getDate()) + 'T'
-			+ pad(this.getHours()) + ':'
-			+ pad(this.getMinutes()) + ':'
-			+ pad(this.getSeconds());
-		if(this.getTimezoneOffset() == 0) localIsoString += 'Z';
-		return localIsoString;
-	};
+
+	Array.extend({
+		// Behaves like itertools.groupby, maintaining sort order
+		eachGroup: function(map, fn) {
+			var arr = this, result = [], lastKey;
+			var keys = this.map(map);
+			this.each(function(el, index) {
+				var key = keys[index];
+				if(result.length != 0 && !Object.equal(key, lastKey)) {
+					fn(lastKey, result);
+					result = [];
+				}
+				lastKey = key;
+				result.push(el);
+			});
+			fn(lastKey, result);
+		}
+	});
 
 	// jQuery configuration
 	$.ajaxPrefilter('html', function(options, originalOptions) {
@@ -192,7 +195,7 @@ $(function() {
 
 		HallSummary.loadAll().done(function(all) {
 			all.sortBy(function(s) { return s.date });
-			all.forEach(function(s) {
+			all.each(function(s) {
 				console.log(s);
 				$('<p>').text(s.toString()).appendTo('body');
 			})
@@ -200,32 +203,61 @@ $(function() {
 	}
 
 	if(location.pathname == '/menus') {
-		$('body').empty();
+		$('body').empty().addClass('custompage');
 
 		HallSummary.loadAll().done(function(all) {
-			all.sortBy(function(s) { return s.date });
-			all.forEach(function(s) {
-				console.log(s);
-				var d = $('<div>')
-					.addClass('hall')
-					.addClass('hall-status-'+s.status)
-					.css({overflow: 'hidden'})
-					.append(
-						$('<div>')
-							.addClass('hall-header')
+			all
+				.sortBy(function(s) { return s.date })
+				.eachGroup('date', function(date, halls) {
+					var parent = $('<div>')
+						.addClass('day');
+					var hallsElem = $('<div>')
+						.addClass('halls');
+
+					$('<div>').addClass('date').text(date.format('{dd} {mon}')).appendTo(parent);
+
+					halls.each(function(h) {
+						console.log(h);
+						$('<a>')
+							.addClass('hall')
+							.addClass('hall-status-'+h.status)
+							.attr('href', root + '?' + $.param({event: h.type.id, date: date.toLocalISODateString()}))
 							.append(
 								$('<div>')
-									.addClass('progress')
-									.css('width', 100 * s.available/s.capacity + '%'),
-								$('<p>').text(s.toString())
+									.addClass('hall-capacity-bar')
+									.css('width', 100 * h.available/h.capacity + '%'),
+								$('<span>')
+									.addClass('hall-capacity')
+									.text(h.available + ' / ' + h.capacity),
+								$('<a>')
+									.text(h.type.name + ' - ' + h.status)
 							)
-					)
-					.appendTo('body');
+							.appendTo(hallsElem);
+					});
+					hallsElem.appendTo(parent);
 
-				s.loadMenu().done(function() {
-					if(s.menu) $('<div>').addClass('menu').text(s.menu).appendTo(d);
-				})
-			})
+					function makeMenu(m) {
+						var elem = $('<div>').addClass('menu');
+						m.each(function(course) {
+							$('<div>').addClass('menu-course').text(course.trim()).appendTo(elem);
+						})
+						return elem;
+					}
+
+					var menuTasks = halls.map('loadMenu');
+					$.whenAll(menuTasks).done(function() {
+						var first = halls[0];
+						var notUnique = halls.all(function(h) { return Object.equal(h.menu, first.menu); });
+						if(notUnique) {
+							makeMenu(first.menu).appendTo(parent);
+						} else {
+							halls.each(function(h) { 
+								makeMenu(h.menu).appendTo(parent);
+							});
+						}
+					})
+					parent.appendTo('body');
+				});
 		});
 	}
 });

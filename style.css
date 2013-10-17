@@ -12,51 +12,83 @@
 	-webkit-column-count: 3;
 }
 
-.hall {
+.day {
 	overflow: hidden;
 	margin: 5px;
 	background: #f8f8f8;
 	width: 300px;
 	float: left;
+	min-height: 300px;
 }
 
-.hall p {
+.day p {
 	margin: 0;
 	padding: 0;
 }
 
-.hall .menu {
-	font-size: 50%;
+.day .menu {
+	font-size: 60%;
 	width: auto;
 	float: none;
-	min-height: 250px;
 	margin: 0;
 	white-space: pre;
+	background: transparent;
+	clear: both;
+	padding: 0;
 }
 
-.hall .hall-header {
+.day .menu .menu-course:not(:last-child) {
+	border-bottom: 2px solid #e0e0e0;
+	padding: 5px;
+}
+
+.day .halls {
+	overflow: hidden;
+}
+.day .hall {
 	position: relative;
 	background-color: #e0e0e0;
 	padding: 5px;
+	height: 20px;
+	display: block;
+	text-decoration: none;
 }
-.hall.hall-status-booked .hall-header{
+.day .hall.hall-status-booked {
 	overflow: hidden;
 	background-color: #c0e0c0;
 }
-.hall.hall-status-closed .hall-header{
+.day .hall.hall-status-closed {
 	overflow: hidden;
 	background-color: #e0c0c0;
 }
-.hall.hall-status-open .hall-header{
+.day .hall.hall-status-open {
 	overflow: hidden;
 	background-color: #e0e0c0;
 }
 
-.hall .hall-header .progress {
+.day .hall .hall-capacity-bar {
 	position: absolute;
 	right: 0;
 	top:0;
 	background: rgba(255, 255, 255, 0.5);
 	height: 100%;
 	text-align: right;
+}
+.day .date{
+	float: left;
+	height: 50px;
+	padding: 5px;
+	background: #808080;
+	line-height: 25px;
+	font-size: 25px;
+	text-align: center;
+	width: 50px;
+	color: white;
+}
+.day .hall .hall-capacity{
+	float: right;
+	color: #404040;
+}
+.custompage {
+	font-family: sans-serif;
 }
