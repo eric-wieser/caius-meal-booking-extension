@@ -16,9 +16,20 @@
 			});
 		}
 	});
-	Date.prototype.toISODateString = function() { return this.toISOString().substring(0, 10); };
 	Date.prototype.clone = function() { return new Date(this.getTime()); };
-
+	Date.prototype.toISODateString = function() { return this.toISOString().substring(0, 10); };
+	Date.prototype.toLocalISODateString = function() { return this.toLocalISOString().substring(0, 10); };
+	Date.prototype.toLocalISOString = function() {
+		function pad(n) { return n < 10 ? '0' + n : n }
+		var localIsoString = this.getFullYear() + '-'
+			+ pad(this.getMonth() + 1) + '-'
+			+ pad(this.getDate()) + 'T'
+			+ pad(this.getHours()) + ':'
+			+ pad(this.getMinutes()) + ':'
+			+ pad(this.getSeconds());
+		if(this.getTimezoneOffset() == 0) localIsoString += 'Z';
+		return localIsoString;
+	};
 
 	// jQuery configuration
 	$.ajaxPrefilter('html', function(options, originalOptions) {
@@ -54,14 +65,14 @@ var HallSummary = function(type) {
 	this.type = type;
 }
 HallSummary.prototype.toString = function() {
-	return this.date.toISODateString() + ' (' + this.type.name + ') - ' + this.status + ' ' + this.available + '/' + this.capacity;
+	return this.date.toLocalISODateString() + ' (' + this.type.name + ') - ' + this.status + ' ' + this.available + '/' + this.capacity;
 }
 HallSummary.prototype.loadMenu = function() {
 	var d = $.Deferred();
 	var self = this;
 	$.get(root, {
 		'event': this.type.id,
-		'date': this.date.toISOString().substring(0, 10)
+		'date': this.date.toLocalISODateString()
 	}, null, 'html').done(function(data) {
 		var $doc = $(data);
 		var $doc = $(data);
@@ -72,6 +83,7 @@ HallSummary.prototype.loadMenu = function() {
 
 		var menu = $doc.find('.menu');
 		if(menu.size()) {
+			menu = menu.text().trim().split('*')
 			self.menu = menu;
 			return d.resolve();
 		}
@@ -100,7 +112,6 @@ HallSummary.loadAllOfType = function(type) {
 					return;
 				}
 				summary.date = new Date(str);
-				summary.date.setHours(0,0,0,0);
 			}
 
 			var parseFullness = function(summary, str) {
@@ -212,7 +223,7 @@ $(function() {
 					.appendTo('body');
 
 				s.loadMenu().done(function() {
-					if(s.menu) s.menu.appendTo(d);
+					if(s.menu) $('<div>').addClass('menu').text(s.menu).appendTo(d);
 				})
 			})
 		});

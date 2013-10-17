@@ -16,6 +16,8 @@
 	overflow: hidden;
 	margin: 5px;
 	background: #f8f8f8;
+	width: 300px;
+	float: left;
 }
 
 .hall p {
@@ -25,6 +27,11 @@
 
 .hall .menu {
 	font-size: 50%;
+	width: auto;
+	float: none;
+	min-height: 250px;
+	margin: 0;
+	white-space: pre;
 }
 
 .hall .hall-header {
