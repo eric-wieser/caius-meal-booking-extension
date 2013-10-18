@@ -45,11 +45,9 @@
 	});
 
 	jQuery.whenAll = function(dfds) {
-		var d = $.Deferred();
-		this.when.apply(this, dfds).done(function() {
-			d.resolve([].slice.call(arguments))
-		}).fail(d.reject);
-		return d.promise();
+		return this.when.apply(this, dfds).then(function() {
+			return [].slice.call(arguments);
+		}).promise();
 	}
 })();
 
@@ -70,111 +68,107 @@ var HallSummary = function(type) {
 HallSummary.prototype.toString = function() {
 	return this.date.toLocalISODateString() + ' (' + this.type.name + ') - ' + this.status + ' ' + this.available + '/' + this.capacity;
 }
-HallSummary.prototype.loadMenu = function() {
-	var d = $.Deferred();
-	var self = this;
-	$.get(root, {
+HallSummary.prototype.loadPage = function() {
+	if(this._ajaxTask) return this._ajaxTask;
+
+	return this._ajaxTask = $.get(root, {
 		'event': this.type.id,
 		'date': this.date.toLocalISODateString()
-	}, null, 'html').done(function(data) {
-		var $doc = $(data);
-		var $doc = $(data);
-
+	}, null, 'html').then(function(data) {
+		return $(data);
+	}).promise();
+}
+HallSummary.prototype.loadMenu = function() {
+	var self = this;
+	return this.loadPage().then(function($doc) {
 		var error = $doc.find('.error');
 		if(error.size())
-			return d.reject(error);
+			return $.Deferred().reject(error);
 
 		var menu = $doc.find('.menu');
 		if(menu.size()) {
 			menu = menu.text().trim().split('*')
 			self.menu = menu;
-			return d.resolve();
+			return menu;
 		}
-		else
-			return d.resolve();
 
-	}).fail(d.reject);
-
-	return d.promise();
+	}).promise();
 };
 
 HallSummary.loadAllOfType = function(type) {
-	var d = $.Deferred();
 	// request all valid unix timestamps
-	$.get(root, {'event': type.id, 'from': '1970-01-01', 'to': '2038-01-19'}, null, 'html')
-		.done(function(data) {
-			var $doc = $(data);
+	return $.get(root, {
+		'event': type.id,
+		'from': '1970-01-01',
+		'to': '2038-01-19'
+	}, null, 'html').then(function(data) {
+		var $doc = $(data);
 
-			var tables = $doc.find('table.list');
-			var bookedRows = tables.eq(0).find('tr').slice(1, -1);
-			var unbookedRows = tables.eq(1).find('tr').slice(1, -1);
+		var tables = $doc.find('table.list');
+		var bookedRows = tables.eq(0).find('tr').slice(1, -1);
+		var unbookedRows = tables.eq(1).find('tr').slice(1, -1);
 
-			var parseDate = function(summary, str) {
-				if(str.trim() == "No current bookings found.") {
-					summary.invalid = true;
-					return;
-				}
-				summary.date = new Date(str);
+		var parseDate = function(summary, str) {
+			if(str.trim() == "No current bookings found.") {
+				summary.invalid = true;
+				return;
 			}
+			summary.date = new Date(str);
+		}
 
-			var parseFullness = function(summary, str) {
+		var parseFullness = function(summary, str) {
 
-				var fullnessParts = /\((\d+)\/(\d+)\)/.exec(str)
-				try {
-					summary.capacity = parseInt(fullnessParts[2]);
-					summary.available = parseInt(fullnessParts[1]);
-				} catch(e) {};
-			}
+			var fullnessParts = /\((\d+)\/(\d+)\)/.exec(str)
+			try {
+				summary.capacity = parseInt(fullnessParts[2]);
+				summary.available = parseInt(fullnessParts[1]);
+			} catch(e) {};
+		}
 
-			var parseStatus = function(summary, str) {
-				str = str.trim();
-				if(str == '(signup deadline has passed)')
-					summary.status = 'closed';
-				else if(str == '(signup has not yet opened)')
-					summary.status = 'unopened';
-				else if(str == '')
-					summary.status = 'open';
-				else
-					summary.status = str;
-			}
+		var parseStatus = function(summary, str) {
+			str = str.trim();
+			if(str == '(signup deadline has passed)')
+				summary.status = 'closed';
+			else if(str == '(signup has not yet opened)')
+				summary.status = 'unopened';
+			else if(str == '')
+				summary.status = 'open';
+			else
+				summary.status = str;
+		}
 
 
-			var results = [].concat(
-				bookedRows.map(function() {
-					var cells = $(this).find('td');
-					var s = new HallSummary(type);
-					parseDate(s, cells.eq(0).text());
-					parseFullness(s, cells.eq(2).text());
-					s.status = 'booked'
-					if(!s.invalid)
-						return s;
-				}).get(),
-				unbookedRows.map(function() {
-					var s = new HallSummary(type);
-					var cells = $(this).find('td');
-					parseDate(s, cells.eq(0).text());
-					parseFullness(s, cells.eq(1).text());
-					parseStatus(s, cells.eq(2).text());
-					if(!s.invalid)
-						return s;
-				}).get()
-			)
-			d.resolve(results);
-		})
-		.fail(d.fail);
-
-	return d.promise();
+		var results = [].concat(
+			bookedRows.map(function() {
+				var cells = $(this).find('td');
+				var s = new HallSummary(type);
+				parseDate(s, cells.eq(0).text());
+				parseFullness(s, cells.eq(2).text());
+				s.status = 'booked'
+				if(!s.invalid)
+					return s;
+			}).get(),
+			unbookedRows.map(function() {
+				var s = new HallSummary(type);
+				var cells = $(this).find('td');
+				parseDate(s, cells.eq(0).text());
+				parseFullness(s, cells.eq(1).text());
+				parseStatus(s, cells.eq(2).text());
+				if(!s.invalid)
+					return s;
+			}).get()
+		)
+		return results;
+	}).promise();
 };
 
 HallSummary.loadAll = function() {
 	var tasks = types.map(function(t) {
 		return HallSummary.loadAllOfType(t);
 	});
-	var d = $.Deferred();
-	$.whenAll(tasks).done(function(results) {
-		d.resolve([].concat.apply([], results));
-	}).fail(d.reject);
-	return d.promise();
+	return $.whenAll(tasks).then(function(results) {
+		return [].concat.apply([], results);
+	}).promise();
 }
 
 // Static data
