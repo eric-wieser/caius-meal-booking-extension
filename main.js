@@ -120,6 +120,31 @@ HallSummary.prototype.loadMenu = function() {
 
 	}).promise();
 };
+HallSummary.prototype.loadAttendees = function() {
+	var self = this;
+	return this.loadPage().then(function($doc) {
+		var error = $doc.find('.error');
+		if(error.size())
+			return $.Deferred().reject(error);
+
+		var attendees = $doc.find('.list');
+		if(attendees.size()) {
+			attendees = attendees.find('tr').map(function() {
+				var cells = $(this).find('td');
+				var name = cells.eq(0).text();
+				var guestStr = /\((.*)\)/.exec(cells.eq(1).text());
+				if(guestStr)
+					return {name: name, guests: guestStr};
+				else
+					return {name: name};
+			}).get();
+			self.attendees = attendees;
+			return attendees;
+		}
+
+	}).promise();
+};
+
 
 HallSummary.loadAllOfType = function(type) {
 	// request all valid unix timestamps
