@@ -51,6 +51,32 @@
 	}
 })();
 
+// var NormalMenu = function(html) {
+// 	menu = html.split('<br>')
+// 	self.menu = menu;
+// 	menu.push(menu.length+'');
+// 	return menu;
+// };
+
+var parseMenu = function(type, mHtml) {
+	var lines = mHtml
+		.replace(/\n/g, ' ')
+		.split(/<br(?: ?\/?)>/g)
+		.map(function(l) { return l.trim(); });
+
+	if(type.name != 'cafeteria' && lines[1] == '') {
+		lines[1] = '*';
+	}
+
+
+	var courses = lines
+		.join('\n')
+		.split('\n*\n');
+
+
+	return courses;
+}
+
 var HallType = function(name, id) {
 	this.name = name;
 	this.id = id;
@@ -87,7 +113,7 @@ HallSummary.prototype.loadMenu = function() {
 
 		var menu = $doc.find('.menu');
 		if(menu.size()) {
-			menu = menu.text().trim().split('*')
+			menu = parseMenu(self.type, menu.html());
 			self.menu = menu;
 			return menu;
 		}
@@ -184,6 +210,12 @@ var types = [
 $(function() {
 	console.log("Hello World");
 
+	$('.sidebar ul li:last-child').before(
+		$('<li>').append(
+			$('<a>').attr('href', '/menus').text('Summary')
+		)
+	);
+
 	if(location.pathname == '/summary') {
 		$('body').empty();
 
@@ -268,7 +300,7 @@ $(function() {
 							});
 						}
 						if(!hasMenu)
-							parent.addClass('nomenu');
+							parent.addClass('nomenu')
 					})
 					parent.appendTo('body');
 				});
