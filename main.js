@@ -199,6 +199,12 @@ $(function() {
 	if(location.pathname == '/menus') {
 		$('body').empty().addClass('custompage');
 
+		$('<a>')
+			.addClass('today-link')
+			.attr('href', '#today')
+			.text('today')
+			.appendTo('body');
+
 		HallSummary.loadAll().done(function(all) {
 			all
 				.sortBy(function(s) { return s.date })
@@ -208,7 +214,11 @@ $(function() {
 					var hallsElem = $('<div>')
 						.addClass('halls');
 
-					$('<div>').addClass('date').text(date.format('{dd} {mon}')).appendTo(parent);
+					if(date.is('today')) parent.attr('id', 'today');
+
+					$('<div>').addClass('fulldate').html(
+						date.format('<span class="weekday">{weekday}</span><span class="date">{dd}</span><span class="month">{month}</span>')
+					).appendTo(parent);
 
 					halls.each(function(h) {
 						console.log(h);
@@ -242,13 +252,22 @@ $(function() {
 					$.whenAll(menuTasks).done(function() {
 						var first = halls[0];
 						var notUnique = halls.all(function(h) { return Object.equal(h.menu, first.menu); });
+						var hasMenu = false;
 						if(notUnique) {
-							makeMenu(first.menu).appendTo(parent);
+							if(first.menu) {
+								makeMenu(first.menu).appendTo(parent);
+								hasMenu = true;
+							}
 						} else {
 							halls.each(function(h) { 
-								makeMenu(h.menu).appendTo(parent);
+								if(h.menu) {
+									hasMenu = true;
+									makeMenu(h.menu).appendTo(parent);
+								}
 							});
 						}
+						if(!hasMenu)
+							parent.addClass('nomenu');
 					})
 					parent.appendTo('body');
 				});

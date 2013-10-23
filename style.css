@@ -35,6 +35,7 @@
 	background: transparent;
 	clear: both;
 	padding: 0;
+	width: auto;
 }
 
 .day .menu .menu-course:not(:last-child) {
@@ -55,15 +56,15 @@
 }
 .day .hall.hall-status-booked {
 	overflow: hidden;
-	background-color: #c0e0c0;
+	background-color: #c0f0c0;
 }
 .day .hall.hall-status-closed {
 	overflow: hidden;
-	background-color: #e0c0c0;
+	background-color: #f0c0c0;
 }
 .day .hall.hall-status-open {
 	overflow: hidden;
-	background-color: #e0e0c0;
+	background-color: #f0f0c0;
 }
 
 .day .hall .hall-capacity-bar {
@@ -74,21 +75,93 @@
 	height: 100%;
 	text-align: right;
 }
-.day .date{
+.day .fulldate {
 	float: left;
 	height: 50px;
 	padding: 5px;
 	background: #808080;
-	line-height: 25px;
-	font-size: 25px;
 	text-align: center;
 	width: 50px;
 	color: white;
 }
+
+.day .fulldate .weekday {
+	display: block;
+	height: 10px;
+	line-height: 10px;
+	font-size: 10px;
+}
+.day .fulldate .date {
+	display: block;
+	height: 30px;
+	line-height: 30px;
+	font-size: 30px;
+}
+.day .fulldate .month {
+	display: block;
+	height: 10px;
+	line-height: 10px;
+	font-size: 10px;
+}
+
 .day .hall .hall-capacity{
 	float: right;
 	color: #404040;
 }
+
+.day.nomenu {
+	min-height: 145px;
+}
+/*
+.day.nomenu .fulldate {
+	width: 25px;
+	height: 25px;
+}
+
+.day.nomenu .fulldate .weekday {
+	height: 5px;
+	line-height: 5px;
+	font-size: 5px;
+}
+.day.nomenu .fulldate .date {
+	height: 15px;
+	line-height: 15px;
+	font-size: 15px;
+}
+.day.nomenu .fulldate .month {
+	height: 5px;
+	line-height: 5px;
+	font-size: 5px;
+}*/
+
+.day#today {
+	width: 610px;
+	height: 610px;
+}
+
+.day#today .menu {
+	width: 610px;
+	height: 610px;
+	font-size: 100%;
+}
+
+.day#today .fulldate {
+	background: black;
+}
+
+.today-link {
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	padding: 5px;
+	text-decoration: none;
+	background: #c0c0c0;
+	height: 20px;
+	line-height: 20px;
+}
+
 .custompage {
 	font-family: sans-serif;
+	padding-top: 30px;
 }
