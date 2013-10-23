@@ -198,6 +198,7 @@ $(function() {
 
 	if(location.pathname == '/menus') {
 		$('body').empty().addClass('custompage');
+		document.title = "Menus | Caius Hall Bookings";
 
 		$('<a>')
 			.addClass('today-link')
