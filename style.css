@@ -53,17 +53,18 @@
 	height: 20px;
 	display: block;
 	text-decoration: none;
-}
-.day .hall.hall-status-booked {
 	overflow: hidden;
+}
+.key .key-booked,
+.day .hall.hall-status-booked {
 	background-color: #c0f0c0;
 }
+.key .key-closed,
 .day .hall.hall-status-closed {
-	overflow: hidden;
 	background-color: #f0c0c0;
 }
+.key .key-open,
 .day .hall.hall-status-open {
-	overflow: hidden;
 	background-color: #f0f0c0;
 }
 
@@ -149,16 +150,37 @@
 	background: black;
 }
 
-.today-link {
+.tools {
 	display: block;
 	position: fixed;
 	top: 0;
 	left: 0;
+	right: 0;
+	z-index: 10;
+}
+
+.today-link {
 	padding: 5px;
 	text-decoration: none;
 	background: #c0c0c0;
 	height: 20px;
 	line-height: 20px;
+	float: left;
+}
+
+.key {
+	float: right;
+	background: white;
+	padding-bottom: 5px;
+	padding-left: 5px;
+}
+
+.key span {
+	display: inline-block;
+	margin-left: 5px;
+	padding: 5px;
+	text-align: center;
+	height: 20px;
 }
 
 .custompage {

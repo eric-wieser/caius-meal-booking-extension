@@ -257,11 +257,19 @@ $(function() {
 		$('body').empty().addClass('custompage');
 		document.title = "Menus | Caius Hall Bookings";
 
-		$('<a>')
-			.addClass('today-link')
-			.attr('href', '#today')
-			.text('today')
-			.appendTo('body');
+		$('<div>').addClass('tools').append(
+			$('<a>')
+				.addClass('today-link')
+				.attr('href', '#today')
+				.text('today'),
+
+			$('<div>').addClass('key').append(
+				'Key:',
+				$('<span>').addClass('key-booked').text('booked'),
+				$('<span>').addClass('key-open').text('open'),
+				$('<span>').addClass('key-closed').text('closed')
+			)
+		).appendTo('body');
 
 		HallSummary.loadAll().done(function(all) {
 			all
@@ -292,7 +300,7 @@ $(function() {
 									.addClass('hall-capacity')
 									.text(h.available + ' / ' + h.capacity),
 								$('<a>')
-									.text(h.type.name + ' - ' + h.status)
+									.text(h.type.name)
 							)
 							.appendTo(hallsElem);
 					});
