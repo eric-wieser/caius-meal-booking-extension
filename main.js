@@ -273,7 +273,7 @@ $(function() {
 
 		HallSummary.loadAll().done(function(all) {
 			all
-				.sortBy(function(s) { return s.date })
+				.sortBy('date')
 				.eachGroup('date', function(date, halls) {
 					var parent = $('<div>')
 						.addClass('day');
@@ -288,6 +288,7 @@ $(function() {
 						date.format('<span class="weekday">{weekday}</span><span class="date">{dd}</span><span class="month">{month}</span>')
 					).appendTo(parent);
 
+					halls = halls.sortBy(function(h) { return h.type.id; })
 					halls.each(function(h) {
 						console.log(h);
 						$('<a>')
