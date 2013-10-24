@@ -150,6 +150,14 @@
 	background: black;
 }
 
+.day-past {
+	display: none;
+}
+
+.show-past-halls .day-past {
+	display: block;
+}
+
 .day.day-past:not(.day-booked) {
 	opacity: 0.25;
 }

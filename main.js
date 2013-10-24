@@ -254,7 +254,7 @@ $(function() {
 	}
 
 	if(location.pathname == '/menus') {
-		$('body').empty().addClass('custompage');
+		$('body').empty().addClass('custompage').addClass('show-past-halls');
 		document.title = "Menus | Caius Hall Bookings";
 
 		$('<div>').addClass('tools').append(
@@ -262,6 +262,17 @@ $(function() {
 				.addClass('today-link')
 				.attr('href', '#today')
 				.text('today'),
+
+			$('<button>').click(function() {
+				var cls = 'show-past-halls';
+				if($('body').hasClass(cls)) {
+					$('body').removeClass(cls);
+					$(this).text('Show past halls');
+				} else {
+					$('body').addClass(cls);
+					$(this).text('Hide past halls');
+				}
+			}).click(),
 
 			$('<div>').addClass('key').append(
 				'Key:',
