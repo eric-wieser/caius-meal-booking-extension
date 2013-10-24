@@ -135,19 +135,26 @@
 	font-size: 5px;
 }*/
 
-.day#today {
+.day.day-current {
 	width: 610px;
 	height: 610px;
 }
 
-.day#today .menu {
+.day.day-current .menu {
 	width: 610px;
 	height: 610px;
 	font-size: 100%;
 }
 
-.day#today .fulldate {
+.day.day-current .fulldate {
 	background: black;
+}
+
+.day.day-past:not(.day-booked) {
+	opacity: 0.25;
+}
+.day.day-past:not(.day-booked):hover {
+	opacity: 1;
 }
 
 .tools {

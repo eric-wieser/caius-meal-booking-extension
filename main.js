@@ -280,7 +280,9 @@ $(function() {
 					var hallsElem = $('<div>')
 						.addClass('halls');
 
-					if(date.is('today')) parent.attr('id', 'today');
+					if(date.is('today')) parent.attr('id', 'today').addClass('day-current');
+					if(date.isBefore('today')) parent.addClass('day-past');
+					if(date.isAfter('today')) parent.addClass('day-future');
 
 					$('<div>').addClass('fulldate').html(
 						date.format('<span class="weekday">{weekday}</span><span class="date">{dd}</span><span class="month">{month}</span>')
@@ -304,6 +306,9 @@ $(function() {
 							)
 							.appendTo(hallsElem);
 					});
+					if(halls.some(function(h) { return h.status == 'booked'; }))
+						parent.addClass('day-booked');
+
 					hallsElem.appendTo(parent);
 
 					function makeMenu(m) {
@@ -325,7 +330,7 @@ $(function() {
 								hasMenu = true;
 							}
 						} else {
-							halls.each(function(h) { 
+							halls.each(function(h) {
 								if(h.menu) {
 									hasMenu = true;
 									makeMenu(h.menu).appendTo(parent);
