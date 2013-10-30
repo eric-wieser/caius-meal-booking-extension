@@ -246,86 +246,80 @@ $.when(
 	$.defer(chrome.extension.sendRequest, {action: 'getTemplates'}),
 	$.defer($(document).ready)
 ).then(function domLoaded(templates) {
-	console.log(templates);
-	console.log("Hello World");
 
+	// Add sidebar link
 	$('.sidebar ul li:last-child').before(
 		$('<li>').append(
 			$('<a>').attr('href', '/menus').text('Summary')
 		)
 	);
 
-	if(location.pathname == '/summary') {
-		$('body').empty();
-
-		HallSummary.loadAll().done(function(all) {
-			all.sortBy(function(s) { return s.date });
-			all.each(function(s) {
-				console.log(s);
-				$('<p>').text(s.toString()).appendTo('body');
-			})
-		});
-	}
 
 	if(location.pathname == '/menus') {
+		// load the templates required
+		$.template("dayTemplate", templates.day.default);
+		$.template("toolbarTemplate", templates.toolbar.default);
+
 		$('body').empty().addClass('custompage');
 		document.title = "Menus | Caius Hall Bookings";
 
-		$.template("toolbarTemplate", templates.toolbar.default);
+		// add the toolbar
 		var toolbar = $.tmpl("toolbarTemplate");
-
 		toolbar.find('.toggle-past-halls').click(function() {
 			$('body').toggleClass('show-past-halls');
 		});
 		toolbar.appendTo('body');
 
-		HallSummary.loadAll().done(function(all) {
-			all
-				.sortBy('date')
-				.eachGroup('date', function(date, halls) {
-					halls = halls.sortBy(function(h) { return h.type.id; });
+		HallSummary.loadAll().done(function(all) { all
+			.sortBy('date')
+			.eachGroup('date', function(date, halls) {
+				// sort formals and firsts
+				halls = halls.sortBy(function(h) { return h.type.id; });
 
-					$.template("dayTemplate", templates.day.default);
-					var parent = $.tmpl("dayTemplate", {date: date, halls: halls});
+				// populate the template
+				var parent = $.tmpl("dayTemplate", {date: date, halls: halls});
 
-					if(date.is('today')) parent.attr('id', 'today').addClass('day-current');
-					if(date.isBefore('today')) parent.addClass('day-past');
-					if(date.isAfter('today')) parent.addClass('day-future');
+				// add status classes
+				if(date.is('today')) parent.attr('id', 'today').addClass('day-current');
+				if(date.isBefore('today')) parent.addClass('day-past');
+				if(date.isAfter('today')) parent.addClass('day-future');
+				if(halls.some(function(h) { return h.status == 'booked'; }))
+					parent.addClass('day-booked');
 
-					if(halls.some(function(h) { return h.status == 'booked'; }))
-						parent.addClass('day-booked');
+				// emit html
+				parent.appendTo('body');
 
-					function makeMenu(m) {
-						var elem = $('<div>').addClass('menu');
-						m.each(function(course) {
-							$('<div>').addClass('menu-course').text(course.trim()).appendTo(elem);
-						})
-						return elem;
-					}
-
-					var menuTasks = halls.map('loadMenu');
-					$.whenAll(menuTasks).done(function() {
-						var first = halls[0];
-						var notUnique = halls.all(function(h) { return Object.equal(h.menu, first.menu); });
-						var hasMenu = false;
-						if(notUnique) {
-							if(first.menu) {
-								makeMenu(first.menu).appendTo(parent);
-								hasMenu = true;
-							}
-						} else {
-							halls.each(function(h) {
-								if(h.menu) {
-									hasMenu = true;
-									makeMenu(h.menu).appendTo(parent);
-								}
-							});
-						}
-						if(!hasMenu)
-							parent.addClass('nomenu')
+				// load menus
+				function makeMenu(m) {
+					var elem = $('<div>').addClass('menu');
+					m.each(function(course) {
+						$('<div>').addClass('menu-course').text(course.trim()).appendTo(elem);
 					})
-					parent.appendTo('body');
-				});
+					return elem;
+				}
+
+				var menuTasks = halls.map('loadMenu');
+				$.whenAll(menuTasks).done(function() {
+					var first = halls[0];
+					var notUnique = halls.all(function(h) { return Object.equal(h.menu, first.menu); });
+					var hasMenu = false;
+					if(notUnique) {
+						if(first.menu) {
+							makeMenu(first.menu).appendTo(parent);
+							hasMenu = true;
+						}
+					} else {
+						halls.each(function(h) {
+							if(h.menu) {
+								hasMenu = true;
+								makeMenu(h.menu).appendTo(parent);
+							}
+						});
+					}
+					if(!hasMenu)
+						parent.addClass('nomenu')
+				})
+			});
 		});
 	}
 });
