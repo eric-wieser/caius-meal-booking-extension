@@ -1,0 +1,174 @@
+<html>
+	<head>
+		<script type="text/javascript" src="fancy-settings/source/lib/store.js"></script>
+		<div id="templates">
+			<div data-name="toolbar">
+				<div class='tools'>
+					<a class='today-link' href='#today'>today</a>
+					<button class="toggle-past-halls">
+						<span class="toggle-past-halls-show">Show past halls</span>
+						<span class="toggle-past-halls-hide">Hide past halls</span>
+					</button>
+
+					<div class='key'>
+						Key:
+						<span class='key-booked'>booked</span>
+						<span class='key-open'>open</span>
+						<span class='key-closed'>closed</span>
+					</div>
+				</div>
+			</div>
+
+			<div data-name="day">
+				<div class="day">
+					<div class='fulldate'>
+						<span class="weekday">{{= date.format("{weekday}") }}</span>
+						<span class="date">{{= date.format("{dd}") }}</span>
+						<span class="month">{{= date.format("{month}") }}</span>
+					</div>
+					<div class="halls">
+						{{each halls}}
+							<a class='hall hall-status-${$value.status}' href='${$value.url}'>
+								<div class='hall-capacity-bar'
+								     style='width: {{= 100 * $value.available/$value.capacity}}%'>
+								</div>
+								<span class='hall-capacity'>
+									${$value.available} / ${$value.capacity}
+								</span>
+								${$value.type.name}
+							</a>
+						{{/each}}
+					</div>
+				</div>
+			</div>
+			<!-- <div data-name="thread">
+				<div class="main-content">
+					<div class="button-set">
+						<a href="?PostID=${posts[0].id}&View=Threaded&ThreshHold=100" class="button">View in Threaded View</a>
+						<a class="button" href="javascript:__doPostBack('ctl00$cphRoblox$PostView1$ctl00$TrackThread','')">{{if tracked}}<input id="ctl00_cphRoblox_PostView1_ctl00_TrackThread" type="checkbox" name="ctl00$cphRoblox$PostView1$ctl00$TrackThread" style="display: none"  />Untrack{{else}}<input id="ctl00_cphRoblox_PostView1_ctl00_TrackThread" type="checkbox" name="ctl00$cphRoblox$PostView1$ctl00$TrackThread" style="display: none" checked />Track{{/if}}
+						</a>
+						<a href="javascript:void(0)" class="button markdown-toggle right">Toggle Markdown</a>
+					</div>
+					<div class="posts old">
+						<div class="page" id="page-${page}">
+							{{tmpl(posts) "postTemplate"}}
+						</div>
+					</div>
+					{{if more}}<span class="loading-more-posts">Loading...</a>{{/if}}
+				</div>
+			</div>
+			<div data-name="post">
+				<article class="forum-post{{if locked}} locked{{/if}}" id="${id}">
+					<section class="user-info {{if user.online}}online{{else}}offline{{/if}}">
+						<a href="../User.aspx?username=${user.name}" title="Visit ${user.name}'s profile ({{if user.online}}online{{else}}offline{{/if}})">
+							<span class="name">${user.name}</span>
+							<div class="images">
+								<img src="../Thumbs/Avatar.ashx?x=100&y=100&Format=Png&username=${user.name}" class="avatar"/>
+								<img src="../Thumbs/BCOverlay.ashx?username=${user.name}" class="bc"/>
+							</div>
+						</a>
+						<div class="details">
+							{{html user.details}}
+						</div>
+					</section>
+					<section class="post-info">
+						<header>
+							<span class="title">${title}</span>
+							<time datetime="${date}" title="${date}" pubdate>${dateString}</time>
+						</header>
+						<div class="content markdown">
+							{{html markedContent}}
+						</div>
+						<div class="content plaintext" style="display: none">${content}</div>
+						<footer class="actions">
+							{{if !locked}}<a class="reply button"
+								href="/Forum/AddPost.aspx?mode=flat&amp;PostID=${id}">
+								<span>+</span> Reply
+							</a>
+							<a class="quote button"
+								href="/Forum/AddPost.aspx?mode=flat&amp;PostID=${id}&amp;quote=true" style="display: none; ">
+								<span>&rdquo;</span> Quote
+							</a>{{/if}}
+							<a class="report"
+								href="../AbuseReport/ForumPost.aspx?PostID=${id}&amp;RedirectUrl=http%3A%2F%2Fwww.roblox.com%2FForum%2FShowPost.aspx%3FPostID%3D${id}%23${id}">
+								Report
+							</a>
+						</footer>
+					</section>
+				</article>
+			</div>
+			<div data-name="pagenumber">
+				<div id="page-${n}" class="page-indicator">
+					<div>Page ${n}</div>
+				</div>
+			</div>
+			<div data-name="forum">
+				<div class="main-content">
+					<div class="button-set">
+						<a href="/Forum/AddPost.aspx?ForumID=${id}" class="button">New thread</a>
+						<a class="button" style="float: right" href="javascript:confirm('About to mark all posts as read') && __doPostBack('ctl00$cphRoblox$ThreadView1$ctl00$MarkAllRead','')">Mark all threads as read
+						</a>
+					</div>
+					<div class="threads">
+						{{html threads}}
+					</div>
+				</div>
+			</div>
+			<div data-name="postButtons">
+				<div class="button-set">
+					<input type="submit" name="ctl00$cphRoblox$Createeditpost1$PostForm$Cancel" value="Cancel" id="ctl00_cphRoblox_Createeditpost1_PostForm_Cancel" class="button">
+					<input type="submit" name="ctl00$cphRoblox$Createeditpost1$PostForm$PreviewButton" value="Preview &gt;" onclick="__doPostBack('ctl00$cphRoblox$Createeditpost1$PostForm$PreviewButton', '')" id="ctl00_cphRoblox_Createeditpost1_PostForm_PreviewButton" class="button">
+					<input type="submit" name="ctl00$cphRoblox$Createeditpost1$PostForm$PostButton" value="Post" id="ctl00_cphRoblox_Createeditpost1_PostForm_PostButton" class="button right">
+				</div>
+			</div>
+			<div data-name="newForm">
+				<section class="reply-form">
+					<div class="title">
+						<label for="title">Subject:</label>
+						<span><input name="ctl00$cphRoblox$Createeditpost1$PostForm$PostSubject" type="text" value="${title}" maxlength="60" /></span>
+					</div>
+					<div id="wmd-panel">
+						<div id="wmd-button-bar"></div>
+						<textarea id="wmd-input" class="wmd-input" name="ctl00$cphRoblox$Createeditpost1$PostForm$PostBody">${message}</textarea>
+					</div>
+					<input id="ctl00_cphRoblox_Createeditpost1_PostForm_AllowReplies" type="checkbox" name="ctl00$cphRoblox$Createeditpost1$PostForm$AllowReplies" />
+					<label for="ctl00_cphRoblox_Createeditpost1_PostForm_AllowReplies">Do not allow replies to this post.</label>
+				</section>
+			</div>
+			<div data-name="thread" data-theme="small">
+				<div class="main-content">
+					<div class="button-set">
+						<a href="?PostID=${posts[0].id}" class="button">View in Standard View</a>
+						<a class="button" href="javascript:__doPostBack('ctl00$cphRoblox$PostView1$ctl01$TrackThread','')">{{if tracked}}<input id="ctl00_cphRoblox_PostView1_ctl01_TrackThread" type="checkbox" name="ctl00$cphRoblox$PostView1$ctl01$TrackThread" style="display: none"  />Untrack{{else}}<input id="ctl00_cphRoblox_PostView1_ctl01_TrackThread" type="checkbox" name="ctl00$cphRoblox$PostView1$ctl01$TrackThread" style="display: none" checked />Track{{/if}}
+						</a>
+						<a href="javascript:void(0)" class="button markdown-toggle right">Toggle Markdown</a>
+					</div>
+					<div class="posts threaded">
+						{{tmpl(posts) "postTemplate"}}
+					</div>
+				</div>
+			</div>
+			<div data-name="post" data-theme="small">
+				<article class="forum-post{{if locked}} locked{{/if}}" id="${id}">
+					<section class="user-info">
+						<img src="/Thumbs/Avatar.ashx?x=100&amp;y=100&amp;Format=Png&amp;username=${author}" class="avatar" title="${author}"/>
+					</section>
+					<section class="post-info">
+						<div class="container">
+							<header>
+								<span class="title">${title}</span>
+								<time datetime="${date}" title="${date}" pubdate>${dateString}</time>                            
+							</header>
+							<div class="content markdown">{{html markedContent}}</div>
+							<div class="content plaintext" style="display: none">${content}</div>
+						</div>
+					</section>
+					{{if replies}}
+					{{tmpl(replies) "postTemplate"}}
+					{{/if}}
+				</article>
+			</div> -->
+		</div>
+		<script type="text/javascript" src="background.js"></script>
+	</head>
+</html>

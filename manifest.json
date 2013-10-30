@@ -8,6 +8,7 @@
 			"matches": ["https://www.mealbookings.cai.cam.ac.uk/*"],
 			"js": [
 				"jquery-1.10.2.js",
+				"jquery.tmpl.min.js",
 				"sugar.js",
 				"main.js"
 			],
@@ -17,5 +18,6 @@
 	],
 	"permissions": [
 		"storage"
-	]
+	],
+	"background": {"page": "background.html"}
 }

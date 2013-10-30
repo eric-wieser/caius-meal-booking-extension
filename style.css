@@ -150,13 +150,12 @@
 	background: black;
 }
 
-.day-past {
-	display: none;
-}
+.day-past {	display: none; }
+.toggle-past-halls-hide { display: none; }
 
-.show-past-halls .day-past {
-	display: block;
-}
+body.show-past-halls .day-past { display: block; }
+body.show-past-halls .toggle-past-halls-hide { display: block; }
+body.show-past-halls .toggle-past-halls-show { display: none; }
 
 .day.day-past:not(.day-booked) {
 	opacity: 0.25;

@@ -91,6 +91,9 @@ var HallSummary = function(type) {
 	this.status = 'unknown';
 	this.type = type;
 }
+Object.defineProperty(HallSummary.prototype, 'url', {
+	get: function() { return root + '?' + $.param({event: this.type.id, date: this.date.toLocalISODateString()}); }
+});
 HallSummary.prototype.toString = function() {
 	return this.date.toLocalISODateString() + ' (' + this.type.name + ') - ' + this.status + ' ' + this.available + '/' + this.capacity;
 }
@@ -232,7 +235,18 @@ var types = [
 	new HallType('sunday formal', 258)
 ];
 
-$(function() {
+$.defer = function(f) {
+	var d = $.Deferred();
+	var args = [].slice.call(arguments, 1);
+	args.push(d.resolve);
+	f.apply(f, args);
+	return d;
+}
+$.when(
+	$.defer(chrome.extension.sendRequest, {action: 'getTemplates'}),
+	$.defer($(document).ready)
+).then(function domLoaded(templates) {
+	console.log(templates);
 	console.log("Hello World");
 
 	$('.sidebar ul li:last-child').before(
@@ -254,74 +268,32 @@ $(function() {
 	}
 
 	if(location.pathname == '/menus') {
-		$('body').empty().addClass('custompage').addClass('show-past-halls');
+		$('body').empty().addClass('custompage');
 		document.title = "Menus | Caius Hall Bookings";
 
-		$('<div>').addClass('tools').append(
-			$('<a>')
-				.addClass('today-link')
-				.attr('href', '#today')
-				.text('today'),
+		$.template("toolbarTemplate", templates.toolbar.default);
+		var toolbar = $.tmpl("toolbarTemplate");
 
-			$('<button>').click(function() {
-				var cls = 'show-past-halls';
-				if($('body').hasClass(cls)) {
-					$('body').removeClass(cls);
-					$(this).text('Show past halls');
-				} else {
-					$('body').addClass(cls);
-					$(this).text('Hide past halls');
-				}
-			}).click(),
-
-			$('<div>').addClass('key').append(
-				'Key:',
-				$('<span>').addClass('key-booked').text('booked'),
-				$('<span>').addClass('key-open').text('open'),
-				$('<span>').addClass('key-closed').text('closed')
-			)
-		).appendTo('body');
+		toolbar.find('.toggle-past-halls').click(function() {
+			$('body').toggleClass('show-past-halls');
+		});
+		toolbar.appendTo('body');
 
 		HallSummary.loadAll().done(function(all) {
 			all
 				.sortBy('date')
 				.eachGroup('date', function(date, halls) {
-					var parent = $('<div>')
-						.addClass('day');
-					var hallsElem = $('<div>')
-						.addClass('halls');
+					halls = halls.sortBy(function(h) { return h.type.id; });
+
+					$.template("dayTemplate", templates.day.default);
+					var parent = $.tmpl("dayTemplate", {date: date, halls: halls});
 
 					if(date.is('today')) parent.attr('id', 'today').addClass('day-current');
 					if(date.isBefore('today')) parent.addClass('day-past');
 					if(date.isAfter('today')) parent.addClass('day-future');
 
-					$('<div>').addClass('fulldate').html(
-						date.format('<span class="weekday">{weekday}</span><span class="date">{dd}</span><span class="month">{month}</span>')
-					).appendTo(parent);
-
-					halls = halls.sortBy(function(h) { return h.type.id; })
-					halls.each(function(h) {
-						console.log(h);
-						$('<a>')
-							.addClass('hall')
-							.addClass('hall-status-'+h.status)
-							.attr('href', root + '?' + $.param({event: h.type.id, date: date.toLocalISODateString()}))
-							.append(
-								$('<div>')
-									.addClass('hall-capacity-bar')
-									.css('width', 100 * h.available/h.capacity + '%'),
-								$('<span>')
-									.addClass('hall-capacity')
-									.text(h.available + ' / ' + h.capacity),
-								$('<a>')
-									.text(h.type.name)
-							)
-							.appendTo(hallsElem);
-					});
 					if(halls.some(function(h) { return h.status == 'booked'; }))
 						parent.addClass('day-booked');
-
-					hallsElem.appendTo(parent);
 
 					function makeMenu(m) {
 						var elem = $('<div>').addClass('menu');
