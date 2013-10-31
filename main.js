@@ -131,7 +131,10 @@ HallSummary.prototype.loadAttendees = function() {
 			return $.Deferred().reject(error);
 
 		var attendees = $doc.find('.list');
-		if(attendees.size()) {
+		if(attendees.size() == 1 && attendees.find('tr').find('td').size() == 1) {
+			self.attendees = [];
+		}
+		else if(attendees.size()) {
 			attendees = attendees.find('tr').map(function() {
 				var cells = $(this).find('td');
 				var name = cells.eq(0).text();
@@ -142,9 +145,8 @@ HallSummary.prototype.loadAttendees = function() {
 					return {name: name};
 			}).get();
 			self.attendees = attendees;
-			return attendees;
 		}
-
+		return self.attendees;
 	}).promise();
 };
 
