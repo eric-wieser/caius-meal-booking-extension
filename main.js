@@ -271,6 +271,7 @@ $.when(
 			$('body').toggleClass('show-past-halls');
 		});
 		toolbar.appendTo('body');
+		var attendeeWrapper = $('<div>').addClass('attendee-wrapper').appendTo('body');
 
 		HallSummary.loadAll().done(function(all) { all
 			.sortBy('date')
@@ -279,17 +280,36 @@ $.when(
 				halls = halls.sortBy(function(h) { return h.type.id; });
 
 				// populate the template
-				var parent = $.tmpl("dayTemplate", {date: date, halls: halls});
+				var dayElem = $.tmpl("dayTemplate", {date: date, halls: halls});
 
 				// add status classes
-				if(date.is('today')) parent.attr('id', 'today').addClass('day-current');
-				if(date.isBefore('today')) parent.addClass('day-past');
-				if(date.isAfter('today')) parent.addClass('day-future');
+				if(date.is('today')) dayElem.attr('id', 'today').addClass('day-current');
+				if(date.isBefore('today')) dayElem.addClass('day-past');
+				if(date.isAfter('today')) dayElem.addClass('day-future');
 				if(halls.some(function(h) { return h.status == 'booked'; }))
-					parent.addClass('day-booked');
+					dayElem.addClass('day-booked');
 
 				// emit html
-				parent.appendTo('body');
+				dayElem.appendTo('body');
+
+				dayElem.find('.hall').each(function(i) {
+					var hallElem = $(this);
+					var hall = halls[i];
+					hall.loadAttendees().done(function() {
+						var list = $();
+						if(hall.attendees.length) {
+							list = $('<div>').hide();
+							hall.attendees.each(function(a) {
+								$('<span>').text(a.name).appendTo(list);
+							});
+							list.appendTo(attendeeWrapper);
+						}
+						hallElem.on('mouseenter', function() {
+							attendeeWrapper.children('div').hide();
+							list.show().focus();
+						});
+					})
+				});
 
 				// load menus
 				function makeMenu(m) {
@@ -307,19 +327,19 @@ $.when(
 					var hasMenu = false;
 					if(notUnique) {
 						if(first.menu) {
-							makeMenu(first.menu).appendTo(parent);
+							makeMenu(first.menu).appendTo(dayElem);
 							hasMenu = true;
 						}
 					} else {
 						halls.each(function(h) {
 							if(h.menu) {
 								hasMenu = true;
-								makeMenu(h.menu).appendTo(parent);
+								makeMenu(h.menu).appendTo(dayElem);
 							}
 						});
 					}
 					if(!hasMenu)
-						parent.addClass('nomenu')
+						dayElem.addClass('nomenu')
 				})
 			});
 		});

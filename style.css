@@ -13,7 +13,6 @@
 }
 
 .day {
-	overflow: hidden;
 	margin: 5px;
 	background: #f8f8f8;
 	width: 300px;
@@ -44,7 +43,6 @@
 }
 
 .day .halls {
-	overflow: hidden;
 }
 .day .hall {
 	position: relative;
@@ -53,7 +51,7 @@
 	height: 20px;
 	display: block;
 	text-decoration: none;
-	overflow: hidden;
+	margin-left: 60px;
 }
 .key .key-booked,
 .day .hall.hall-status-booked {
@@ -113,6 +111,29 @@
 .day.nomenu {
 	min-height: 145px;
 }
+
+.attendee-wrapper {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 5px;
+	background: rgba(192, 192, 192, 0.9);
+    overflow-y: hidden;
+    z-index: 10;
+    font-size: 75%;
+    padding-bottom: 20px;
+    -webkit-transition: all 200ms ease-in-out 0s;
+}
+
+.attendee-wrapper div {
+    -webkit-column-fill: auto;
+    -webkit-column-width: 110px;
+    -webkit-column-gap: 10px;
+}
+.attendee-wrapper div span {
+	display: block;
+}
 /*
 .day.nomenu .fulldate {
 	width: 25px;
@@ -142,7 +163,6 @@
 
 .day.day-current .menu {
 	width: 610px;
-	height: 610px;
 	font-size: 100%;
 }
 
