@@ -100,10 +100,7 @@ HallSummary.prototype.toString = function() {
 HallSummary.prototype.loadPage = function() {
 	if(this._ajaxTask) return this._ajaxTask;
 
-	return this._ajaxTask = $.get(root, {
-		'event': this.type.id,
-		'date': this.date.toLocalISODateString()
-	}, null, 'html').then(function(data) {
+	return this._ajaxTask = $.get(this.url, null, null, 'html').then(function(data) {
 		return $(data);
 	}).promise();
 }
@@ -129,6 +126,7 @@ HallSummary.prototype.loadAttendees = function() {
 		var error = $doc.find('.error');
 		if(error.size())
 			return $.Deferred().reject(error);
+			self.attendees = [];
 
 		var attendees = $doc.find('.list');
 		if(attendees.size() == 1 && attendees.find('tr').find('td').size() == 1) {
@@ -149,6 +147,55 @@ HallSummary.prototype.loadAttendees = function() {
 		return self.attendees;
 	}).promise();
 };
+
+/* Possible booking messages:
+update:
+	<div class="message"><div class="success">Booking updated successfully</div></div>
+	<div class="message"><div class="success">Booking created successfully</div></div>
+delete_confirm:
+	<div class="message"><div class="success">Your booking for .* on .* has been successfully deleted.</div></div>
+*/
+
+HallSummary.prototype.makeBooking = function() {
+	return $.post(this.url, {
+		update: ''
+	}, null, 'html').then(function(data) {
+		var message = $(data).find('.message > div');
+
+		if(message.size() == 0)
+			return new $.Deferred().reject('Booking failed silently!');
+		else if(message.hasClass('success') && message.text().match(/Booking (?:created|updated) successfully/))
+			return; // everything is ok
+		else
+			console.log(data);
+	});
+};
+
+HallSummary.prototype.clearBooking = function() {
+	return $.post(this.url, {
+		delete_confirm: ''
+	}, null, 'html').then(function(data) {
+		console.log(data);
+	});
+};
+
+HallSummary.prototype.swapTo = function(typeId) {
+	$.post(this.url, {
+		transfer: '',
+		target: typeId
+	}).then(function(data) {
+		console.log(data);
+	});
+};
+
+
+/*
+target:257
+transfer:""
+
+delete:
+edit:
+*/
 
 
 HallSummary.loadAllOfType = function(type) {
@@ -225,7 +272,7 @@ HallSummary.loadAll = function() {
 	return $.whenAll(tasks).then(function(results) {
 		return [].concat.apply([], results);
 	}).promise();
-}
+};
 
 // Static data
 var root = 'https://www.mealbookings.cai.cam.ac.uk/index.php';
@@ -236,6 +283,15 @@ var types = [
 	new HallType('cafeteria', 262),
 	new HallType('sunday formal', 258)
 ];
+
+var friendLoader = (function() {
+	var d = $.Deferred();
+	chrome.storage.sync.get("friends", function(data) {
+     	console.log("data", data);
+     	d.resolve(data);
+    });
+    return d.promise();
+})();
 
 $.defer = function(f) {
 	var d = $.Deferred();
@@ -309,6 +365,22 @@ $.when(
 							list.show().focus();
 						});
 					})
+					hallElem.find('.booking-button-book').on('click', function() {
+						hall.makeBooking().then(function() {
+							location.reload();
+						});
+						return false;
+					});
+					hallElem.find('.booking-button-cancel').on('click', function() {
+						hall.clearBooking().then(function() {
+							location.reload();
+						});
+						return false;
+					});
+				});
+				dayElem.find('.date').on('click', function() {
+					window.selected = halls;
+					return false;
 				});
 
 				// load menus

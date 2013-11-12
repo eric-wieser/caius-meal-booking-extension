@@ -112,6 +112,31 @@
 	min-height: 145px;
 }
 
+.booking-button {
+	float: right;
+	display: none;
+	z-index: 2;
+	position: relative;
+	box-sizing: border-box;
+	height: 25px;
+	margin: -2.5px;
+}
+.day:hover        .hall-status-open   .booking-button-book   { display: block; }
+.day:hover        .hall-status-open   .booking-button-switch { display: none; }
+.day:hover        .hall-status-open   .booking-button-cancel { display: none; }
+
+/* Switching not yet implemented */
+.day-booked:hover .hall-status-open   .booking-button-book   { display: /*none */ block; }
+.day-booked:hover .hall-status-open   .booking-button-switch { display: /*block */ none; }
+.day-booked:hover .hall-status-open   .booking-button-cancel { display: none; }
+
+.day-booked:hover .hall-status-booked .booking-button-book   { display: none; }
+.day-booked:hover .hall-status-booked .booking-button-switch { display: none; }
+.day-booked:hover .hall-status-booked .booking-button-cancel { display: block; }
+
+.day:hover .hall-status-booked .hall-capacity { display: none; }
+.day:hover .hall-status-open   .hall-capacity { display: none; }
+
 .attendee-wrapper {
 	position: fixed;
 	bottom: 0;
@@ -176,6 +201,8 @@
 body.show-past-halls .day-past { display: block; }
 body.show-past-halls .toggle-past-halls-hide { display: block; }
 body.show-past-halls .toggle-past-halls-show { display: none; }
+
+.toggle-past-halls { height: 25px; margin: 2.5px;}
 
 .day.day-past:not(.day-booked) {
 	opacity: 0.25;
