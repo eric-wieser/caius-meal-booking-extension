@@ -156,9 +156,11 @@ delete_confirm:
 	<div class="message"><div class="success">Your booking for .* on .* has been successfully deleted.</div></div>
 */
 
-HallSummary.prototype.makeBooking = function() {
+HallSummary.prototype.makeBooking = function(settings) {
 	return $.post(this.url, {
-		update: ''
+		update: '',
+		vegetarians: settings.vegetarian ? 1 : 0,
+		requirements: settings.requirements
 	}, null, 'html').then(function(data) {
 		var message = $(data).find('.message > div');
 
@@ -312,8 +314,11 @@ $.defer = function(f) {
 }
 $.when(
 	$.defer(chrome.extension.sendRequest, {action: 'getTemplates'}),
+	$.defer(chrome.extension.sendRequest, {action: 'getPreferences'}),
 	$.defer($(document).ready)
-).then(function domLoaded(templates) {
+).then(function domLoaded(templates, preferences) {
+
+	console.log(preferences);
 
 	// Add sidebar link
 	$('.sidebar ul li:last-child').before(
@@ -376,7 +381,7 @@ $.when(
 						});
 					})
 					hallElem.find('.booking-button-book').on('click', function() {
-						hall.makeBooking().then(function() {
+						hall.makeBooking(preferences).then(function() {
 							location.reload();
 						});
 						return false;
