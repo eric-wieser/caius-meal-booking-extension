@@ -157,6 +157,10 @@
     -webkit-column-width: 110px;
     -webkit-column-gap: 10px;
 }
+.attendee-wrapper div strong {
+	margin-bottom: 1em;
+	display: block;
+}
 .attendee-wrapper div span {
 	display: block;
 }

@@ -299,8 +299,7 @@ var types = [
 var friendLoader = (function() {
 	var d = $.Deferred();
 	chrome.storage.sync.get("friends", function(data) {
-     	console.log("data", data);
-     	d.resolve(data);
+     	d.resolve(data.friends || []);
     });
     return d.promise();
 })();
@@ -327,6 +326,29 @@ $.when(
 		)
 	);
 
+	if(location.pathname == '/profile.php') {
+		var friendsElem;
+		$('table.form').append(
+			$('<tr>').append(
+				$('<th>').append(
+					$('<label>').attr('for', 'friends').text('Friends:')
+				),
+				$('<td>').append(
+					friendsElem = $('<textarea>').attr('cols', 40). attr('rows', 40).attr('name', 'friends').prop('disabled', true)
+				)
+			)
+		);
+		friendLoader.then(function(friends) {
+			friendsElem.val(friends.join('\n'));
+			friendsElem.prop('disabled', false);
+		});
+
+		$('form').submit(function() {
+			friendsElem.removeAttr('name');
+			var friends = friendsElem.val().trim().split('\n');
+			chrome.storage.sync.set({friends: friends});
+		})
+	}
 
 	if(location.pathname == '/menus') {
 		// load the templates required
@@ -366,12 +388,16 @@ $.when(
 				dayElem.find('.hall').each(function(i) {
 					var hallElem = $(this);
 					var hall = halls[i];
-					hall.loadAttendees().done(function() {
+					$.when(hall.loadAttendees(), friendLoader).done(function(_, friends) {
 						var list = $();
 						if(hall.attendees.length) {
 							list = $('<div>').hide();
+							var friendsElem = $('<strong>').appendTo(list);
 							hall.attendees.each(function(a) {
-								$('<span>').text(a.name).appendTo(list);
+								if(friends.indexOf(a.name) != -1)
+									$('<span>').text(a.name).appendTo(friendsElem);
+								else
+									$('<span>').text(a.name).appendTo(list);
 							});
 							list.appendTo(attendeeWrapper);
 						}
