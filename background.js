@@ -1,6 +1,6 @@
 var profileLoad = $.get('https://www.mealbookings.cai.cam.ac.uk/profile.php').then(function(data) {
 	return {
-		vegetarian: $(data).find('input[name=vegetarian]').val() == "1",
+		vegetarian: $(data).find('input[name=vegetarian]').prop('checked'),
 		requirements: $(data).find('input[name=requirements]').val(),
 	};
 })

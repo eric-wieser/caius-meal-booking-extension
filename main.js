@@ -163,13 +163,31 @@ HallSummary.prototype.makeBooking = function(settings) {
 		requirements: settings.requirements
 	}, null, 'html').then(function(data) {
 		var message = $(data).find('.message > div');
+		var notOpenYet =  $(data).find('h2').filter(function() {
+			return $(this).text().trim() == "Bookings for this event have not yet opened";
+		}).length != 0;
 
-		if(message.size() == 0)
-			return new $.Deferred().reject('Booking failed silently!');
-		else if(message.hasClass('success') && message.text().match(/Booking (?:created|updated) successfully/))
-			return; // everything is ok
-		else
-			console.log(data);
+		var d = $.Deferred();
+
+		if(notOpenYet) {
+			return d.reject('Not open');
+		}
+		else if(message.hasClass('success') && message.text().match(/Booking (?:created|updated) successfully/)) {
+			return d.resolve(); // everything is ok
+		}
+		else if(message.size() == 0) {
+			var win = window.open('about:blank');
+			with(win.document) {
+				open();
+				write(data.replace(/<(\/?)ajax:/g, '<$1'));
+				close();
+			}
+			return d.reject('Booking failed silently!');
+		}
+		else {
+			return d.reject('Error!');
+			console.log(message.html());
+		}
 	});
 };
 
@@ -299,9 +317,9 @@ var types = [
 var friendLoader = (function() {
 	var d = $.Deferred();
 	chrome.storage.sync.get("friends", function(data) {
-     	d.resolve(data.friends || []);
-    });
-    return d.promise();
+		d.resolve(data.friends || []);
+	});
+	return d.promise();
 })();
 
 $.defer = function(f) {
@@ -456,5 +474,30 @@ $.when(
 				})
 			});
 		});
+	}
+
+
+	if(location.pathname == '/prebook') {
+		var christmasDinner = new HallSummary(new HallType('christmas formal', 280));
+		christmasDinner.date = new Date(2013, 11, 4);
+		console.log(christmasDinner.url);
+
+		var then = new Date(2013, 10, 30, 6);
+
+		var retry = function() {
+			christmasDinner.makeBooking({}).then(function() {
+				document.write("success<br />");
+				document.write(christmasDinner.url);
+			}, function(err) {
+				var timeLeft = then - new Date();
+				var waitfor = Math.max(timeLeft / 2, 1000);
+				document.write("Failed at " + new Date()+", waiting for " + waitfor/1000.0 + "seconds <br />");
+				setTimeout(retry, waitfor);
+				console.log(timeLeft);
+			});
+		}
+
+		retry();
+
 	}
 });
