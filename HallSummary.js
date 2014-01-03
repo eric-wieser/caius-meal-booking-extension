@@ -225,7 +225,7 @@ HallSummary.loadAllOfType = function(type) {
 };
 
 HallSummary.loadAll = function() {
-	var tasks = types.map(function(t) {
+	var tasks = HallType.all.map(function(t) {
 		return HallSummary.loadAllOfType(t);
 	});
 	return $.whenAll(tasks).then(function(results) {
