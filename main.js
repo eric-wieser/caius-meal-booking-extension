@@ -25,7 +25,14 @@ var types = [
 	// 277 - 278: unused
 	new HallType('christmas first', 279),
 	new HallType('christmas formal', 280),
-	new HallType('superhall', 282)
+	new HallType('superhall', 282),
+	// 283 - 289: unused
+	new HallType('first', 290),
+	new HallType('formal', 291),
+	new HallType('sunday formal', 292),
+	// 292 - 295: unused
+	new HallType('cafeteria', 296),
+	new HallType('pre-term', 297)
 ];
 
 var friendLoader = $.defer(Object.method(chrome.storage.sync, 'get'), "friends").then(function(data) {
