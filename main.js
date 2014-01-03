@@ -28,13 +28,13 @@ var types = [
 	new HallType('superhall', 282)
 ];
 
-var friendLoader = $.defer(chrome.storage.sync.get, "friends").then(function(data) {
+var friendLoader = $.defer(Object.method(chrome.storage.sync, 'get'), "friends").then(function(data) {
 	return data.friends || [];
 });
 
 $.when(
-	$.defer(chrome.extension.sendRequest, {action: 'getTemplates'}),
-	$.defer(chrome.extension.sendRequest, {action: 'getPreferences'}),
+	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getTemplates'}),
+	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getPreferences'}),
 	$.defer($(document).ready)
 ).then(function domLoaded(templates, preferences) {
 

@@ -54,6 +54,10 @@ $.defer = function(f) {
 	var d = $.Deferred();
 	var args = [].slice.call(arguments, 1);
 	args.push(d.resolve);
-	f.apply(f, args);
+	f.apply(null, args);
 	return d;
 };
+
+Object.method = function(o, name) {
+	return o[name].bind(o);
+}
