@@ -180,7 +180,7 @@ HallSummary.loadAllOfType = function(type) {
 
 		var parseFullness = function(summary, str) {
 
-			var fullnessParts = /\((\d+)\/(\d+)\)/.exec(str)
+			var fullnessParts = /\((-?\d+)\/(\d+)\)/.exec(str)
 			try {
 				summary.capacity = parseInt(fullnessParts[2]);
 				summary.available = parseInt(fullnessParts[1]);
@@ -225,10 +225,15 @@ HallSummary.loadAllOfType = function(type) {
 };
 
 HallSummary.loadAll = function() {
-	var tasks = HallType.all.map(function(t) {
-		return HallSummary.loadAllOfType(t);
-	});
-	return $.whenAll(tasks).then(function(results) {
-		return [].concat.apply([], results);
-	}).promise();
+	return HallType.loadAll()
+		.then(function(types) {
+			var tasks = types.map(function(t) {
+				return HallSummary.loadAllOfType(t);
+			});
+			return $.whenAll(tasks);
+		})
+		.then(function(results) {
+			return [].concat.apply([], results);
+		})
+		.promise();
 };

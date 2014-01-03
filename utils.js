@@ -35,11 +35,11 @@ Array.extend({
 });
 
 // jQuery configuration
-$.ajaxPrefilter('html', function(options, originalOptions) {
+$.ajaxPrefilter(function(options, originalOptions) {
 	if(!originalOptions.dataFilter) {
 		// encode root-level tags in a way that they can be interpreted
 		options.dataFilter = function(htmlString) {
-			return htmlString.replace(/<(\/?)(html|head|body)/g, '<$1ajax:$2')
+			return htmlString.replace(/<(\/?)(html|head|body|img)/g, '<$1ajax:$2')
 		};
 	}
 });

@@ -57,7 +57,10 @@ $.when(
 		toolbar.appendTo('body');
 		var attendeeWrapper = $('<div>').addClass('attendee-wrapper').appendTo('body');
 
-		HallSummary.loadAll().done(function(all) { all
+		HallSummary.loadAll().done(function(all) {
+			console.log("Eek", all);
+
+			all
 			.sortBy('date')
 			.eachGroup('date', function(date, halls) {
 				// sort formals and firsts
