@@ -1,31 +1,40 @@
-var profileLoad = $.get('https://www.mealbookings.cai.cam.ac.uk/profile.php').then(function(data) {
-	return {
-		vegetarian: $(data).find('input[name=vegetarian]').prop('checked'),
-		requirements: $(data).find('input[name=requirements]').val(),
-	};
-});
+var loggedIn = $.Deferred();
 
-
-var pageLoaders = Number.range(0, 350).every().map(function(i) {
-	return $.get('https://www.mealbookings.cai.cam.ac.uk/index.php', {event: i}).then(function(d) {
-		var header = $(d).find('h1');
-		var title = header.text();
-		var description = header.nextAll('p').first().text();
-		if(/^Current bookings for/.test(title))
-			return undefined;
-		else if(/^Error:/.test(title))
-			return null;
-		else
-			return {id: i, name: title, description: description}
+var profileLoad = loggedIn
+	.then(function() {
+		return $.get('https://www.mealbookings.cai.cam.ac.uk/profile.php');
 	})
-});
+	.then(function(data) {
+		return {
+			vegetarian: $(data).find('input[name=vegetarian]').prop('checked'),
+			requirements: $(data).find('input[name=requirements]').val(),
+		};
+	});
 
-var hallNameLoad = $.whenAll(pageLoaders).then(function(titles) {
-	// remove non-existant halls
-	return titles.filter(function(x) { return x; });
-});
+var hallNameLoad = loggedIn
+	.then(function() {
+		var pageLoaders = Number.range(0, 350).every().map(function(i) {
+			return $.get('https://www.mealbookings.cai.cam.ac.uk/index.php', {event: i}).then(function(d) {
+				var header = $(d).find('h1');
+				var title = header.text();
+				var description = header.nextAll('p').first().text();
+				if(/^Current bookings for/.test(title))
+					return undefined;
+				else if(/^Error:/.test(title))
+					return null;
+				else
+					return {id: i, name: title, description: description}
+			})
+		});
+		return $.whenAll(pageLoaders)
+	})
+	.then(function(titles) {
+		// remove non-existant halls
+		return titles.filter(function(x) { return x; });
+	});
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	loggedIn.resolve();
 	if(request.action == 'getTemplates') {
 		var templates = document.querySelectorAll('#templates > div');
 		var templatePayload = {};
