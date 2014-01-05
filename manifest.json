@@ -2,7 +2,10 @@
 	"manifest_version": 2,
 
 	"name": "Caius Meal booking helper",
-	"version": "0.0.15",
+	"version": "0.0.16",
+	"icons": {
+		"128": "crest.png"
+	},
 	"content_scripts": [
 		{
 			"matches": ["https://www.mealbookings.cai.cam.ac.uk/*"],
