@@ -8,7 +8,6 @@ HallType.loadAll = function() {
 		data.forEach(function(d) {
 			d.__proto__ = Object.create(HallType.prototype);
 		});
-		console.log("Step 1", data);
 		return data;
 	})
 };
