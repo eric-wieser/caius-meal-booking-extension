@@ -104,9 +104,11 @@ $.when(
 						return false;
 					});
 					hallElem.find('.booking-button-cancel').on('click', function() {
-						hall.clearBooking().then(function() {
-							location.reload();
-						});
+						if(confirm("Are you sure you want to delete this booking?")) {
+							hall.clearBooking().then(function() {
+								location.reload();
+							});
+						}
 						return false;
 					});
 				});
