@@ -13,7 +13,7 @@ var profileLoad = loggedIn
 
 var hallNameLoad = loggedIn
 	.then(function() {
-		var pageLoaders = Number.range(0, 350).every().map(function(i) {
+		var pageLoaders = Number.range(256, 300).every().map(function(i) {
 			return $.get('https://www.mealbookings.cai.cam.ac.uk/index.php', {event: i}).then(function(d) {
 				var header = $(d).find('h1');
 				var title = header.text();
