@@ -11,6 +11,14 @@ var profileLoad = loggedIn
 		};
 	});
 
+var normalizeName = function(name) {
+	name = name.trim().toLowerCase();
+	name = name.replace(/ +hall$/, '');
+	name = name.replace(/1st/, 'first');
+	name = name.replace(/^pre term/, 'pre-term');
+	return name;
+}
+
 var hallNameLoad = loggedIn
 	.then(function() {
 		var pageLoaders = Number.range(256, 300).every().map(function(i) {
@@ -23,7 +31,7 @@ var hallNameLoad = loggedIn
 				else if(/^Error:/.test(title))
 					return null;
 				else
-					return {id: i, name: title, description: description}
+					return {id: i, name: normalizeName(title), description: description}
 			})
 		});
 		return $.whenAll(pageLoaders)
