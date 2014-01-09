@@ -25,13 +25,22 @@ var hallNameLoad = loggedIn
 			return $.get('https://www.mealbookings.cai.cam.ac.uk/index.php', {event: i}).then(function(d) {
 				var header = $(d).find('h1');
 				var title = header.text();
-				var description = header.nextAll('p').first().text();
+
 				if(/^Current bookings for/.test(title))
 					return undefined;
 				else if(/^Error:/.test(title))
 					return null;
-				else
-					return {id: i, name: normalizeName(title), description: description}
+
+				var description = header.nextAll('p').first().text();
+				var dataTable = header.nextAll('.table').first();
+				var data = {};
+				dataTable.find('tr').each(function() {
+					var key = $(this).find('th').text().replace(/:$/,'').toLowerCase();
+					var value = $(this).find('td').text();
+					data[key] = value;
+				});
+
+				return {id: i, name: normalizeName(title), description: description, data: data}
 			})
 		});
 		return $.whenAll(pageLoaders)

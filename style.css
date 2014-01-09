@@ -49,6 +49,7 @@
 	background-color: #e0e0e0;
 	padding: 5px;
 	height: 20px;
+	line-height: 20px;
 	display: block;
 	text-decoration: none;
 	margin-left: 60px;
@@ -64,6 +65,15 @@
 .key .key-open,
 .day .hall.hall-status-open {
 	background-color: #f0f0c0;
+}
+
+.day .hall .time {
+	text-transform: uppercase;
+	color: #202020;
+	font-size: 55%;
+	display: inline-block;
+	vertical-align: middle;
+	font-weight: bold;
 }
 
 .day .hall .hall-capacity-bar {
