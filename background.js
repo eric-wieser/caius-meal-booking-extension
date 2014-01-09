@@ -13,6 +13,7 @@ var profileLoad = loggedIn
 
 var normalizeName = function(name) {
 	name = name.trim().toLowerCase();
+	name = name.replace(/ +\(?early\)?/, '');
 	name = name.replace(/ +hall$/, '');
 	name = name.replace(/1st/, 'first');
 	name = name.replace(/^pre term/, 'pre-term');
