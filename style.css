@@ -121,22 +121,23 @@
 	height: 25px;
 	margin: -2.5px;
 }
-.day        .halls:hover .hall-status-open   .booking-button-book   { display: block; }
-.day        .halls:hover .hall-status-open   .booking-button-switch { display: none; }
-.day        .halls:hover .hall-status-open   .booking-button-cancel { display: none; }
+
+.day        .halls:hover .hall-bookable.hall-status-open   .booking-button-book   { display: block; }
+.day        .halls:hover .hall-bookable.hall-status-open   .booking-button-switch { display: none; }
+.day        .halls:hover .hall-bookable.hall-status-open   .booking-button-cancel { display: none; }
 
 /* Switching not yet implemented */
-.day-booked .halls:hover .hall-status-open   .booking-button-book   { display: /*none */ block; }
-.day-booked .halls:hover .hall-status-open   .booking-button-switch { display: /*block */ none; }
-.day-booked .halls:hover .hall-status-open   .booking-button-cancel { display: none; }
+.day-booked .halls:hover .hall-bookable.hall-status-open   .booking-button-book   { display: /*none */ block; }
+.day-booked .halls:hover .hall-bookable.hall-status-open   .booking-button-switch { display: /*block */ none; }
+.day-booked .halls:hover .hall-bookable.hall-status-open   .booking-button-cancel { display: none; }
 
-.day-booked .halls:hover .hall-status-booked .booking-button-book   { display: none; }
-.day-booked .halls:hover .hall-status-booked .booking-button-switch { display: none; }
-.day-booked .halls:hover .hall-status-booked .booking-button-cancel { display: block; }
+.day-booked .halls:hover .hall-bookable.hall-status-booked .booking-button-book   { display: none; }
+.day-booked .halls:hover .hall-bookable.hall-status-booked .booking-button-switch { display: none; }
+.day-booked .halls:hover .hall-bookable.hall-status-booked .booking-button-cancel { display: block; }
 
 /* Hide capacity when showing booking intent */
-.day        .halls:hover .hall-status-booked .hall-capacity { display: none; }
-.day        .halls:hover .hall-status-open   .hall-capacity { display: none; }
+.day        .halls:hover .hall-bookable.hall-status-booked .hall-capacity { display: none; }
+.day        .halls:hover .hall-bookable.hall-status-open   .hall-capacity { display: none; }
 
 .attendee-wrapper {
 	position: fixed;

@@ -41,7 +41,12 @@ HallSummary.prototype.loadPage = function() {
 
 	return this._ajaxTask = $.get(this.url, null, null, 'html').then(function(data) {
 		return $(data);
-	}).promise();
+	});
+}
+HallSummary.prototype.loadBookableness = function() {
+	return this.loadPage().then(function($doc) {
+		return this.bookable = $doc.find('form').size() > 0;
+	}.bind(this));
 }
 HallSummary.prototype.loadMenu = function() {
 	var self = this;

@@ -96,7 +96,11 @@ $.when(
 							attendeeWrapper.children('div').hide();
 							list.show().focus();
 						});
-					})
+					});
+					hall.loadBookableness().then(function(isBookable) {
+						if(isBookable)
+							hallElem.addClass('hall-bookable');
+					});
 					hallElem.find('.booking-button-book').on('click', function() {
 						hall.makeBooking(preferences).then(function() {
 							location.reload();
