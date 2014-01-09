@@ -150,6 +150,8 @@ $.when(
 					}
 					if(!hasMenu)
 						dayElem.addClass('nomenu')
+
+					dayElem.removeClass('loading');
 				})
 			});
 

@@ -20,6 +20,12 @@
 	min-height: 300px;
 }
 
+.day.loading {
+	background-image: url('chrome-extension://__MSG_@@extension_id__/ajax-loader.gif');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+}
+
 .day p {
 	margin: 0;
 	padding: 0;
@@ -215,6 +221,7 @@
 .day-past {	display: none; }
 .toggle-past-halls-hide { display: none; }
 .past-present-line {
+	display: none;
 	clear: both;
 	margin: 10px -8px 5px;
 	padding: 10px;
