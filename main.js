@@ -152,6 +152,10 @@ $.when(
 						dayElem.addClass('nomenu')
 				})
 			});
+
+			$('.day-past').last().after(
+				$('<div>').addClass('past-present-line').text("Previous halls")
+			);
 		});
 	}
 

@@ -139,6 +139,7 @@
 .day        .halls:hover .hall-bookable.hall-status-booked .hall-capacity { display: none; }
 .day        .halls:hover .hall-bookable.hall-status-open   .hall-capacity { display: none; }
 
+
 .attendee-wrapper {
 	position: fixed;
 	bottom: 0;
@@ -203,10 +204,20 @@
 
 .day-past {	display: none; }
 .toggle-past-halls-hide { display: none; }
+.past-present-line {
+	clear: both;
+	margin: 10px -8px 5px;
+	padding: 10px;
+	line-height: 30px;
+	background: #f8f8f8;
+	color: #808080;
+	text-align: center;
+}
 
 body.show-past-halls .day-past { display: block; }
 body.show-past-halls .toggle-past-halls-hide { display: block; }
 body.show-past-halls .toggle-past-halls-show { display: none; }
+body.show-past-halls .past-present-line { display: block; }
 
 .toggle-past-halls { height: 25px; margin: 2.5px;}
 
