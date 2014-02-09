@@ -162,11 +162,11 @@ edit:
 */
 
 
-HallSummary.loadAll = function() {
+HallSummary.loadAll = function(opts) {
 	return HallType.loadAll()
 		.then(function(types) {
 			var tasks = types.map(function(t) {
-				return t.loadHalls();
+				return t.loadHalls(opts);
 			});
 			return $.whenAll(tasks);
 		})
