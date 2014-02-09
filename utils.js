@@ -18,19 +18,28 @@ Date.extend({
 
 Array.extend({
 	// Behaves like itertools.groupby, maintaining sort order
-	eachGroup: function(map, fn) {
+	orderedGroupBy: function(map) {
 		var arr = this, result = [], lastKey;
 		var keys = this.map(map);
+		var overall = [];
 		this.each(function(el, index) {
 			var key = keys[index];
 			if(result.length != 0 && !Object.equal(key, lastKey)) {
-				fn(lastKey, result);
+				overall.push([lastKey, result]);
 				result = [];
 			}
 			lastKey = key;
 			result.push(el);
 		});
-		fn(lastKey, result);
+		overall.push([lastKey, result]);
+
+		return overall;
+	},
+
+	starMap: function(fn, context) {
+		return this.map(function(el) {
+			return fn.apply(context, el);
+		});
 	}
 });
 

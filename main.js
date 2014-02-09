@@ -2,6 +2,7 @@ var friendLoader = $.defer(Object.method(chrome.storage.sync, 'get'), "friends")
 	return data.friends || [];
 });
 
+
 $.when(
 	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getTemplates'}),
 	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getPreferences'}),
@@ -51,113 +52,135 @@ $.when(
 
 		// add the toolbar
 		var toolbar = $.tmpl("toolbarTemplate");
-		toolbar.find('.toggle-past-halls').click(function() {
-			$('body').toggleClass('show-past-halls');
-		});
 		toolbar.appendTo('body');
 		var attendeeWrapper = $('<div>').addClass('attendee-wrapper').appendTo('body');
 
-		HallSummary.loadAll().done(function(all) { all
-			.sortBy('date')
-			.eachGroup('date', function(date, halls) {
-				// sort formals and firsts
-				halls = halls.sortBy(function(h) { return h.type.id; });
+		function generateDayElement(date, halls) {
+			// sort formals and firsts
+			halls = halls.sortBy(function(h) { return h.type.id; });
 
-				// populate the template
-				var dayElem = $.tmpl("dayTemplate", {date: date, halls: halls});
+			// populate the template
+			var dayElem = $.tmpl("dayTemplate", {date: date, halls: halls});
 
-				// add status classes
-				if(date.is('today')) dayElem.attr('id', 'today').addClass('day-current');
-				if(date.isBefore('today')) dayElem.addClass('day-past');
-				if(date.isAfter('today')) dayElem.addClass('day-future');
-				if(halls.some(function(h) { return h.status == 'booked'; }))
-					dayElem.addClass('day-booked');
+			// add status classes
+			if(date.is('today')) dayElem.attr('id', 'today').addClass('day-current');
+			if(date.isBefore('today')) dayElem.addClass('day-past');
+			if(date.isAfter('today')) dayElem.addClass('day-future');
+			if(halls.some(function(h) { return h.status == 'booked'; }))
+				dayElem.addClass('day-booked');
 
-				// emit html
-				dayElem.appendTo('body');
 
-				dayElem.find('.hall').each(function(i) {
-					var hallElem = $(this);
-					var hall = halls[i];
-					$.when(hall.loadAttendees(), friendLoader).done(function(_, friends) {
-						var list = $();
-						if(hall.attendees.length) {
-							list = $('<div>').hide();
-							var friendsElem = $('<strong>').appendTo(list);
-							hall.attendees.each(function(a) {
-								if(friends.indexOf(a.name) != -1)
-									$('<span>').text(a.name).appendTo(friendsElem);
-								else
-									$('<span>').text(a.name).appendTo(list);
-							});
-							list.appendTo(attendeeWrapper);
-						}
-						hallElem.on('mouseenter', function() {
-							attendeeWrapper.children('div').hide();
-							list.show().focus();
+			dayElem.find('.hall').each(function(i) {
+				var hallElem = $(this);
+				var hall = halls[i];
+				$.when(hall.loadAttendees(), friendLoader).done(function(_, friends) {
+					var list = $();
+					if(hall.attendees.length) {
+						list = $('<div>').hide();
+						var friendsElem = $('<strong>').appendTo(list);
+						hall.attendees.each(function(a) {
+							if(friends.indexOf(a.name) != -1)
+								$('<span>').text(a.name).appendTo(friendsElem);
+							else
+								$('<span>').text(a.name).appendTo(list);
 						});
-					});
-					hall.loadBookableness().then(function(isBookable) {
-						if(isBookable)
-							hallElem.addClass('hall-bookable');
-					});
-					hallElem.find('.booking-button-book').on('click', function() {
-						hall.makeBooking(preferences).then(function() {
-							location.reload();
-						});
-						return false;
-					});
-					hallElem.find('.booking-button-cancel').on('click', function() {
-						if(confirm("Are you sure you want to delete this booking?")) {
-							hall.clearBooking().then(function() {
-								location.reload();
-							});
-						}
-						return false;
+						list.appendTo(attendeeWrapper);
+					}
+					hallElem.on('mouseenter', function() {
+						attendeeWrapper.children('div').hide();
+						list.show().focus();
 					});
 				});
-				dayElem.find('.date').on('click', function() {
-					window.selected = halls;
+				hall.loadBookableness().then(function(isBookable) {
+					if(isBookable)
+						hallElem.addClass('hall-bookable');
+				});
+				hallElem.find('.booking-button-book').on('click', function() {
+					hall.makeBooking(preferences).then(function() {
+						location.reload();
+					});
 					return false;
 				});
-
-				// load menus
-				function makeMenu(m) {
-					var elem = $('<div>').addClass('menu');
-					m.each(function(course) {
-						$('<div>').addClass('menu-course').text(course.trim()).appendTo(elem);
-					})
-					return elem;
-				}
-
-				var menuTasks = halls.map('loadMenu');
-				$.whenAll(menuTasks).done(function() {
-					var first = halls[0];
-					var notUnique = halls.all(function(h) { return Object.equal(h.menu, first.menu); });
-					var hasMenu = false;
-					if(notUnique) {
-						if(first.menu) {
-							makeMenu(first.menu).appendTo(dayElem);
-							hasMenu = true;
-						}
-					} else {
-						halls.each(function(h) {
-							if(h.menu) {
-								hasMenu = true;
-								makeMenu(h.menu).appendTo(dayElem);
-							}
+				hallElem.find('.booking-button-cancel').on('click', function() {
+					if(confirm("Are you sure you want to delete this booking?")) {
+						hall.clearBooking().then(function() {
+							location.reload();
 						});
 					}
-					if(!hasMenu)
-						dayElem.addClass('nomenu')
-
-					dayElem.removeClass('loading');
-				})
+					return false;
+				});
+			});
+			dayElem.find('.date').on('click', function() {
+				window.selected = halls;
+				return false;
 			});
 
-			$('.day-past').last().after(
-				$('<div>').addClass('past-present-line').text("Previous halls")
-			);
+			// load menus
+			function makeMenu(m) {
+				var elem = $('<div>').addClass('menu');
+				m.each(function(course) {
+					$('<div>').addClass('menu-course').text(course.trim()).appendTo(elem);
+				})
+				return elem;
+			}
+
+			var menuTasks = halls.map('loadMenu');
+			$.whenAll(menuTasks).done(function() {
+				var first = halls[0];
+				var notUnique = halls.all(function(h) { return Object.equal(h.menu, first.menu); });
+				var hasMenu = false;
+				if(notUnique) {
+					if(first.menu) {
+						makeMenu(first.menu).appendTo(dayElem);
+						hasMenu = true;
+					}
+				} else {
+					halls.each(function(h) {
+						if(h.menu) {
+							hasMenu = true;
+							makeMenu(h.menu).appendTo(dayElem);
+						}
+					});
+				}
+				if(!hasMenu)
+					dayElem.addClass('nomenu')
+
+				dayElem.removeClass('loading');
+			});
+
+			return dayElem;
+		}
+
+		HallSummary.loadAll({from: new Date()}).done(function(all) { all
+			.sortBy('date')
+			.orderedGroupBy('date')
+			.starMap(generateDayElement)
+			.each(function(dayElem) {
+				// emit html
+				dayElem.appendTo('body');
+			})
+		});
+
+		var oldLoaded = false;
+		toolbar.find('.toggle-past-halls').click(function() {
+			if(!oldLoaded) {
+				var ppl = $('<div>').addClass('past-present-line').text("Previous halls")
+				ppl.insertAfter(toolbar);
+				HallSummary.loadAll({to: new Date().addDays(-1)}).done(function(all) { all
+					.sortBy('date')
+					.orderedGroupBy('date')
+					.starMap(generateDayElement)
+					.each(function(dayElem) {
+						dayElem.insertBefore(ppl);
+					})
+
+					$('.day-past').last().after(
+						$('<div>').addClass('past-present-line').text("Previous halls")
+					);
+				});
+				oldLoaded = true;
+			}
+			$('body').toggleClass('show-past-halls');
 		});
 	}
 
