@@ -36,11 +36,29 @@
 	width: auto;
 	float: none;
 	margin: 0;
-	white-space: pre;
+	white-space: pre-wrap;
 	background: transparent;
 	clear: both;
 	padding: 0;
 	width: auto;
+}
+
+body:not(.diet-vegetarian) .menu span.main-vegetarian {
+	color: #808080;
+	font-size: 75%;
+}
+body:not(.diet-vegetarian) .menu span.main-vegetarian::before {
+	content: "Vegetarian: ";
+	font-size: 50%;
+}
+
+body.diet-vegetarian .menu span.main-meat {
+	color: #808080;
+	font-size: 75%;
+}
+body.diet-vegetarian .menu span.main-meat::before {
+	content: "Meat: ";
+	font-size: 50%;
 }
 
 .day .menu .menu-course:not(:last-child) {

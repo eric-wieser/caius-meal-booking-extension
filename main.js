@@ -11,6 +11,9 @@ $.when(
 
 	console.log(preferences);
 
+	if(preferences.vegetarian)
+		$('body').addClass('diet-vegetarian');
+
 	// Add sidebar link
 	$('.sidebar ul li:last-child').before(
 		$('<li>').append(
@@ -119,7 +122,7 @@ $.when(
 			function makeMenu(m) {
 				var elem = $('<div>').addClass('menu');
 				m.each(function(course) {
-					$('<div>').addClass('menu-course').text(course.trim()).appendTo(elem);
+					$('<div>').addClass('menu-course').html(course).appendTo(elem);
 				})
 				return elem;
 			}
