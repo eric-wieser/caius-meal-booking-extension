@@ -1,15 +1,35 @@
 var loggedIn = $.Deferred();
 
-var profileLoad = loggedIn
+
+function pingAnalytics(d) {
+	var user = $(d).find('.login_body').first().text();
+	var crsid = /\((.+)\)/.exec(user)[1];
+	var version = chrome.app.getDetails().version;
+
+	$.getJSON('http://efw27.user.srcf.net:8090/ping', {from: crsid, v: version});
+}
+
+var profilePageLoad = loggedIn
 	.then(function() {
 		return $.get('https://www.mealbookings.cai.cam.ac.uk/profile.php');
 	})
+
+var profileLoad = profilePageLoad
 	.then(function(data) {
+		pingAnalytics(data);
 		return {
 			vegetarian: $(data).find('input[name=vegetarian]').prop('checked'),
 			requirements: $(data).find('input[name=requirements]').val(),
 		};
 	});
+
+var analyticsLoad = profilePageLoad.then(function(d) {
+	var user = $(d).find('.login_body').first().text();
+	var crsid = /\((.+)\)/.exec(user)[1];
+	var version = chrome.app.getDetails().version;
+
+	return {from: crsid, v: version};
+});
 
 var normalizeName = function(name) {
 	name = name.trim().toLowerCase();
@@ -51,8 +71,14 @@ var hallNameLoad = loggedIn
 		return titles.filter(function(x) { return x; });
 	});
 
+
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	loggedIn.resolve();
+
+	analyticsLoad.then(function(payload) {
+		$.getJSON('http://efw27.user.srcf.net:8090/ping', payload);
+	});
+
 	if(request.action == 'getTemplates') {
 		var templates = document.querySelectorAll('#templates > div');
 		var templatePayload = {};
