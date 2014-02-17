@@ -1,5 +1,14 @@
 var friendLoader = $.defer(Object.method(chrome.storage.sync, 'get'), "friends").then(function(data) {
-	return data.friends || [];
+	var f = data.friends;
+	// first load - no data
+	if(!f)
+		return [];
+	// old format - add another layer of array
+	else if(f.length > 0 && f[0] instanceof String)
+		return [f];
+	// new format
+	else
+		return f;
 });
 
 
@@ -34,13 +43,17 @@ $.when(
 			)
 		);
 		friendLoader.then(function(friends) {
-			friendsElem.val(friends.join('\n'));
+			friendsElem.val(friends.map(function(x) { return x.join('\n'); }).join('\n\n'));
 			friendsElem.prop('disabled', false);
 		});
 
 		$('form').submit(function() {
 			friendsElem.removeAttr('name');
-			var friends = friendsElem.val().trim().split('\n');
+			var friends = friendsElem.val().trim()
+				.split('\n\n')
+				.map(function(x) {
+					return x.split('\n');
+				});
 			chrome.storage.sync.set({friends: friends});
 		})
 	}
@@ -80,11 +93,28 @@ $.when(
 					var list = $();
 					if(hall.attendees.length) {
 						list = $('<div>').hide();
-						var friendsElem = $('<strong>').appendTo(list);
+
+						// convert to a set
+						var attendeeSet = {};
+						var outputSet = {};
 						hall.attendees.each(function(a) {
-							if(friends.indexOf(a.name) != -1)
-								$('<span>').text(a.name).appendTo(friendsElem);
-							else
+							attendeeSet[a.name] = true;
+						});
+
+						// output each friend group
+						friends.each(function(group) {
+							var friendsElem;
+							group.each(function(f) {
+								if(attendeeSet[f]) {
+									if(!friendsElem)
+										friendsElem = $('<strong>').appendTo(list);
+									$('<span>').text(f).appendTo(friendsElem);
+									outputSet[f] = true;
+								}
+							});
+						});
+						hall.attendees.each(function(a) {
+							if(!outputSet[a.name])
 								$('<span>').text(a.name).appendTo(list);
 						});
 						list.appendTo(attendeeWrapper);
