@@ -98,8 +98,19 @@ $.when(
 						var attendeeSet = {};
 						var outputSet = {};
 						hall.attendees.each(function(a) {
-							attendeeSet[a.name] = true;
+							attendeeSet[a.name] = a;
 						});
+
+						var makeName = function(o) {
+							var e = $('<span>').addClass('attendee').text(o.name);
+							if(o.guestCount) {
+								var plus = $('<span>').addClass('guests').text('+'+o.guestCount).appendTo(e);
+								if(o.guests)
+									plus.attr('title', o.guests).addClass('detailed');
+							}
+
+							return e;
+						}
 
 						// output each friend group
 						friends.each(function(group) {
@@ -107,15 +118,15 @@ $.when(
 							group.each(function(f) {
 								if(attendeeSet[f]) {
 									if(!friendsElem)
-										friendsElem = $('<strong>').appendTo(list);
-									$('<span>').text(f).appendTo(friendsElem);
+										friendsElem = $('<span>').addClass('friendgroup').appendTo(list);
+									makeName(attendeeSet[f]).appendTo(friendsElem);
 									outputSet[f] = true;
 								}
 							});
 						});
 						hall.attendees.each(function(a) {
 							if(!outputSet[a.name])
-								$('<span>').text(a.name).appendTo(list);
+								makeName(a).appendTo(list);
 						});
 						list.appendTo(attendeeWrapper);
 					}

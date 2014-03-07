@@ -94,9 +94,12 @@ HallSummary.prototype.loadAttendees = function() {
 			attendees = attendees.find('tr').map(function() {
 				var cells = $(this).find('td');
 				var name = cells.eq(0).text();
-				var guestStr = /\((.*)\)/.exec(cells.eq(1).text());
-				if(guestStr)
-					return {name: name, guests: guestStr};
+				var namedGuestStr = /\((\d+) guests?;(.*)\)/.exec(cells.eq(1).text());
+				var guestStr = /\((\d+) guests?\)/.exec(cells.eq(1).text());
+				if(namedGuestStr)
+					return {name: name, guestCount: namedGuestStr[1], guests: namedGuestStr[2]};
+				else if(guestStr)
+					return {name: name, guestCount: guestStr[1]};
 				else
 					return {name: name};
 			}).get();
