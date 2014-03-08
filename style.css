@@ -193,12 +193,18 @@ body.diet-vegetarian .menu span.main-meat::before {
     -webkit-column-width: 110px;
     -webkit-column-gap: 10px;
 }
-.attendee-wrapper div strong {
+.attendee-wrapper div .friendgroup {
 	margin-bottom: 1em;
+	font-weight: bold;
 	display: block;
 }
-.attendee-wrapper div span {
+.attendee-wrapper div span.attendee {
 	display: block;
+}
+
+.attendee-wrapper div span.attendee .guests.detailed {
+	cursor: help;
+	font-weight: bold;
 }
 /*
 .day.nomenu .fulldate {
