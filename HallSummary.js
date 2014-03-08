@@ -30,7 +30,9 @@ var parseMenu = function(type, mHtml) {
 		var mainLines = courses[2].split(/\n\n+/);
 		mainLines[0] = '<span class="main-meat">' + mainLines[0] + '</span>\n'
 		             + '<span class="main-vegetarian">' + vegCourses[1].replace(/\s+/g, ' ') + '</span>';
-		courses[2] = mainLines.join('\n\n');
+		courses[2] = mainLines.map(function(x) {
+			return '<span class="menu-part">' + x + '</span>';
+		}).join('');
 	}
 
 	return courses;

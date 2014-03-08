@@ -61,9 +61,19 @@ body.diet-vegetarian .menu span.main-meat::before {
 	font-size: 50%;
 }
 
+
+
+.day .menu .menu-course {
+	padding: 5px;
+}
 .day .menu .menu-course:not(:last-child) {
 	border-bottom: 2px solid #e0e0e0;
-	padding: 5px;
+}
+.day .menu .menu-course .menu-part {
+	display: block;
+}
+.day .menu .menu-course .menu-part:not(:last-child) {
+	margin-bottom: 8px;
 }
 
 .day .halls {
