@@ -4,7 +4,7 @@ var friendLoader = $.defer(Object.method(chrome.storage.sync, 'get'), "friends")
 	if(!f)
 		return [];
 	// old format - add another layer of array
-	else if(f.length > 0 && f[0] instanceof String)
+	else if(f.length > 0 && f[0].constructor === String)
 		return [f];
 	// new format
 	else
