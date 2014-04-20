@@ -38,6 +38,10 @@
   margin: 0;
   padding: 0;
 }
+.day .menus {
+  height: 225px;
+  overflow-y: auto;
+}
 .day .menu {
   font-size: 60%;
   float: none;
@@ -335,7 +339,4 @@ body.show-past-halls .past-present-line {
   font-family: sans-serif;
   padding-top: 30px;
   margin: 0;
-}
-.days {
-  overflow: hidden;
 }

@@ -174,20 +174,26 @@ $.when(
 				var first = halls[0];
 				var notUnique = halls.all(function(h) { return !h.menu || Object.equal(h.menu, first.menu); });
 				var hasMenu = false;
+				var wrapper = $('<div>').addClass('menus');
 				if(notUnique) {
 					if(first.menu) {
-						makeMenu(first.menu).appendTo(dayElem);
+						makeMenu(first.menu).appendTo(wrapper);
 						hasMenu = true;
 					}
 				} else {
+						var wrapper = $('<div>').addClass('menus').appendTo(dayElem);
 					halls.each(function(h) {
 						if(h.menu) {
 							hasMenu = true;
-							makeMenu(h.menu).appendTo(dayElem);
+							makeMenu(h.menu).appendTo(wrapper);
+							console.log(JSON.stringify(h.menu));
 						}
 					});
 				}
-				if(!hasMenu)
+				if(hasMenu)
+					wrapper.appendTo(dayElem);
+
+				else
 					dayElem.addClass('nomenu')
 
 				dayElem.removeClass('loading');
