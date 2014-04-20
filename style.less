@@ -1,0 +1,335 @@
+@booked-color: #c0f0c0;
+@closed-color: #f0c0c0;
+@open-color:   #f0f0c0;
+
+@small-tile-height: 65px;
+@tile-spacing: 10px;
+
+
+.menu {
+	float: left;
+	text-align: center;
+	width: 300px;
+	background: #f0f0f0;
+	padding: 5px;
+	margin: 5px;
+}
+.list {
+	display: block;
+	tbody {
+		column-count:3;
+		-webkit-column-count: 3;
+		display: block;
+	}
+	tr {
+		display: block;
+		td {
+			display: inline;
+			padding: 0;
+		}
+		td:first-child::after {
+			content: " " attr(title);
+			color: #808080;
+			font-size: 75%;
+		}
+	}
+}
+.day {
+	margin: @tile-spacing / 2;
+	background: #f8f8f8;
+	width: @tile-spacing * 3 + @small-tile-height * 4;
+	min-height: @tile-spacing * 3 + @small-tile-height * 4;
+	float: left;
+	box-shadow: 0px 0px 3px #808080;
+	p {
+		margin: 0;
+		padding: 0;
+	}
+	.menu {
+		font-size: 60%;
+		width: auto;
+		float: none;
+		margin: 0;
+		white-space: pre-wrap;
+		background: transparent;
+		clear: both;
+		padding: 0;
+		width: auto;
+		.menu-course {
+			padding: 5px;
+			&:not(:last-child) {
+				border-bottom: 1px solid #e0e0e0;
+			}
+
+			.menu-part {
+				display: block;
+				&:not(:last-child) {
+					margin-bottom: 8px;
+				}
+			}
+		}
+
+		body:not(.diet-vegetarian) & {
+			span.main-vegetarian {
+				color: #808080;
+				font-size: 75%;
+			}
+			span.main-vegetarian::before {
+				content: "Vegetarian: ";
+				font-size: 50%;
+			}
+		}
+		body.diet-vegetarian & {
+			span.main-meat {
+				color: #808080;
+				font-size: 75%;
+			}
+			span.main-meat::before {
+				content: "Meat: ";
+				font-size: 50%;
+			}
+		}
+	}
+	.halls-1 .hall {
+		height: @small-tile-height - 10px;
+		line-height: @small-tile-height - 10px;
+	}
+	.halls-2 .hall {
+		height: @small-tile-height / 2 - 10px;
+		line-height: @small-tile-height / 2 - 10px;
+	}
+	.halls-3 .hall {
+		height: @small-tile-height / 3 - 10px;
+		line-height: @small-tile-height / 3 - 10px;
+	}
+	.hall {
+		position: relative;
+		background-color: #e0e0e0;
+		padding: 5px;
+		height: 25px;
+		line-height: 25px;
+		display: block;
+		text-decoration: none;
+		margin-left: @small-tile-height;
+		.time {
+			text-transform: uppercase;
+			color: #202020;
+			font-size: 55%;
+			display: inline-block;
+			vertical-align: middle;
+			font-weight: bold;
+		}
+		.hall-capacity-bar {
+			position: absolute;
+			right: 0;
+			top:0;
+			background: rgba(255, 255, 255, 0.5);
+			height: 100%;
+			text-align: right;
+		}
+		.hall-capacity {
+			float: right;
+			color: #404040;
+			margin-left: 5px;
+		}
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+
+		&.hall-status-booked { background-color: @booked-color; }
+		&.hall-status-closed { background-color: @closed-color; }
+		&.hall-status-open   { background-color: @open-color;   }
+	}
+	.fulldate {
+		float: left;
+		height: @small-tile-height - 10px;
+		padding: 5px;
+		background: #808080;
+		text-align: center;
+		width: @small-tile-height - 10px;
+		color: white;
+		.weekday {
+			display: block;
+			height: 10px;
+			line-height: 10px;
+			font-size: 10px;
+		}
+		.date {
+			display: block;
+			height: 30px;
+			line-height: 30px;
+			font-size: 30px;
+		}
+		.month {
+			display: block;
+			height: 10px;
+			line-height: 10px;
+			font-size: 10px;
+		}
+	}
+	.halls:hover .hall-bookable {
+		.hall-capacity { display: none;	}
+		&.hall-status-open {
+			.booking-button-book { display: block; }
+			.booking-button-switch { display: none; }
+			.booking-button-cancel { display: none; }
+		}
+	}
+	&.day-booked .halls:hover .hall-bookable {
+		&.hall-status-open {
+			.booking-button-book { display:  block; }
+			.booking-button-switch { display:  none; }
+			.booking-button-cancel { display: none; }
+		}
+		&.hall-status-booked {
+			.booking-button-book { display: none; }
+			.booking-button-switch { display: none; }
+			.booking-button-cancel { display: block; }
+		}
+	}
+	&.loading {
+		background-image: url('chrome-extension://__MSG_@@extension_id__/ajax-loader.gif');
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+	}
+
+
+	&.day-current {
+		width:  @small-tile-height*8 + @tile-spacing * 7;
+		height: @small-tile-height*8 + @tile-spacing * 7;
+		.menu {
+			font-size: 100%;
+		}
+		.fulldate {
+			background: black;
+		}
+	}
+
+	&.day-past {
+		display: none;
+		body.show-past-halls & { display: block; }
+
+		&:not(.day-booked) {
+			opacity: 0.25;
+			&:hover {
+				opacity: 1;
+			}
+		}
+	}
+
+	&.nomenu {
+		min-height: initial;
+	}
+}
+
+.toggle-past-halls-hide { display: none; }
+body.show-past-halls {
+	.toggle-past-halls-hide { display: block; }
+	.toggle-past-halls-show { display: none; }
+	.past-present-line { display: block; }
+}
+
+.booking-button {
+	float: right;
+	display: none;
+	z-index: 2;
+	position: relative;
+	box-sizing: border-box;
+
+
+
+	.halls-1 & {
+		height: @small-tile-height - 5px;
+		margin: -2.5px;
+	}
+	.halls-2 & {
+		height: @small-tile-height / 2 - 5px;
+		margin: -2.5px;
+	}
+	.halls-3 & {
+		height: @small-tile-height / 3 - 5px;
+		margin: -2.5px;
+	}
+}
+.attendee-wrapper {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 5px;
+	background: rgba(192, 192, 192, 0.9);
+	overflow-y: hidden;
+	z-index: 10;
+	font-size: 75%;
+	padding-bottom: 20px;
+	-webkit-transition: all 200ms ease-in-out 0s;
+	div {
+		-webkit-column-fill: auto;
+		-webkit-column-width: 110px;
+		-webkit-column-gap: 10px;
+		.friendgroup {
+			margin-bottom: 1em;
+			font-weight: bold;
+			display: block;
+		}
+		span.attendee {
+			display: block;
+			.guests.detailed {
+				cursor: help;
+				font-weight: bold;
+			}
+		}
+	}
+}
+.past-present-line {
+	display: none;
+	clear: both;
+	margin: 10px -8px 5px;
+	padding: 10px;
+	line-height: 30px;
+	background: #f8f8f8;
+	color: #808080;
+	text-align: center;
+}
+.toggle-past-halls {
+	height: 25px;
+	margin: 2.5px;
+}
+.tools {
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 10;
+}
+.today-link {
+	padding: 5px;
+	text-decoration: none;
+	background: #c0c0c0;
+	height: 20px;
+	line-height: 20px;
+	float: left;
+}
+.key {
+	float: right;
+	background: white;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	span {
+		display: inline-block;
+		margin-left: 5px;
+		padding: 5px;
+		text-align: center;
+		height: 20px;
+	}
+	.key-booked { background-color: @booked-color; }
+	.key-closed { background-color: @closed-color; }
+	.key-open   { background-color: @open-color;   }
+}
+.custompage {
+	font-family: sans-serif;
+	padding-top: 30px;
+	margin: 0;
+	overflow: scroll;
+}

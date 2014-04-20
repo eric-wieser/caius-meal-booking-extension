@@ -133,6 +133,7 @@ $.when(
 					hallElem.on('mouseenter', function() {
 						attendeeWrapper.children('div').hide();
 						list.show().focus();
+						$('.days').css('padding-bottom', list.height());
 					});
 				});
 				hall.loadBookableness().then(function(isBookable) {
@@ -171,7 +172,7 @@ $.when(
 			var menuTasks = halls.map('loadMenu');
 			$.whenAll(menuTasks).done(function() {
 				var first = halls[0];
-				var notUnique = halls.all(function(h) { return Object.equal(h.menu, first.menu); });
+				var notUnique = halls.all(function(h) { return !h.menu || Object.equal(h.menu, first.menu); });
 				var hasMenu = false;
 				if(notUnique) {
 					if(first.menu) {
@@ -195,14 +196,17 @@ $.when(
 			return dayElem;
 		}
 
+		var daysElem = $('<div>').addClass('days');
 		HallSummary.loadAll({from: new Date()}).done(function(all) { all
 			.sortBy('date')
 			.orderedGroupBy('date')
 			.starMap(generateDayElement)
 			.each(function(dayElem) {
 				// emit html
-				dayElem.appendTo('body');
-			})
+				dayElem.appendTo(daysElem);
+			});
+
+			daysElem.appendTo('body');
 		});
 
 		var oldLoaded = false;
@@ -216,11 +220,7 @@ $.when(
 					.starMap(generateDayElement)
 					.each(function(dayElem) {
 						dayElem.insertBefore(ppl);
-					})
-
-					$('.day-past').last().after(
-						$('<div>').addClass('past-present-line').text("Previous halls")
-					);
+					});
 				});
 				oldLoaded = true;
 			}

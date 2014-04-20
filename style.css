@@ -1,318 +1,341 @@
 .menu {
-	float: left;
-	text-align: center;
-	width: 300px;
-	background: #f0f0f0;
-	padding: 5px;
-	margin: 5px;
+  float: left;
+  text-align: center;
+  width: 300px;
+  background: #f0f0f0;
+  padding: 5px;
+  margin: 5px;
 }
-
 .list {
-	column-count:3;
-	-webkit-column-count: 3;
+  display: block;
 }
-
+.list tbody {
+  column-count: 3;
+  -webkit-column-count: 3;
+  display: block;
+}
+.list tr {
+  display: block;
+}
+.list tr td {
+  display: inline;
+  padding: 0;
+}
+.list tr td:first-child::after {
+  content: " " attr(title);
+  color: #808080;
+  font-size: 75%;
+}
 .day {
-	margin: 5px;
-	background: #f8f8f8;
-	width: 300px;
-	float: left;
-	min-height: 300px;
+  margin: 5px;
+  background: #f8f8f8;
+  width: 290px;
+  min-height: 290px;
+  float: left;
+  box-shadow: 0px 0px 3px #808080;
 }
-
-.day.loading {
-	background-image: url('chrome-extension://__MSG_@@extension_id__/ajax-loader.gif');
-	background-repeat: no-repeat;
-	background-position: 50% 50%;
-}
-
 .day p {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
-
 .day .menu {
-	font-size: 60%;
-	width: auto;
-	float: none;
-	margin: 0;
-	white-space: pre-wrap;
-	background: transparent;
-	clear: both;
-	padding: 0;
-	width: auto;
+  font-size: 60%;
+  float: none;
+  margin: 0;
+  white-space: pre-wrap;
+  background: transparent;
+  clear: both;
+  padding: 0;
+  width: auto;
 }
-
-body:not(.diet-vegetarian) .menu span.main-vegetarian {
-	color: #808080;
-	font-size: 75%;
-}
-body:not(.diet-vegetarian) .menu span.main-vegetarian::before {
-	content: "Vegetarian: ";
-	font-size: 50%;
-}
-
-body.diet-vegetarian .menu span.main-meat {
-	color: #808080;
-	font-size: 75%;
-}
-body.diet-vegetarian .menu span.main-meat::before {
-	content: "Meat: ";
-	font-size: 50%;
-}
-
-
-
 .day .menu .menu-course {
-	padding: 5px;
+  padding: 5px;
 }
 .day .menu .menu-course:not(:last-child) {
-	border-bottom: 2px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
 }
 .day .menu .menu-course .menu-part {
-	display: block;
+  display: block;
 }
 .day .menu .menu-course .menu-part:not(:last-child) {
-	margin-bottom: 8px;
+  margin-bottom: 8px;
 }
-
-.day .halls {
+body:not(.diet-vegetarian) .day .menu span.main-vegetarian {
+  color: #808080;
+  font-size: 75%;
+}
+body:not(.diet-vegetarian) .day .menu span.main-vegetarian::before {
+  content: "Vegetarian: ";
+  font-size: 50%;
+}
+body.diet-vegetarian .day .menu span.main-meat {
+  color: #808080;
+  font-size: 75%;
+}
+body.diet-vegetarian .day .menu span.main-meat::before {
+  content: "Meat: ";
+  font-size: 50%;
+}
+.day .halls-1 .hall {
+  height: 55px;
+  line-height: 55px;
+}
+.day .halls-2 .hall {
+  height: 22.5px;
+  line-height: 22.5px;
+}
+.day .halls-3 .hall {
+  height: 11.66666667px;
+  line-height: 11.66666667px;
 }
 .day .hall {
-	position: relative;
-	background-color: #e0e0e0;
-	padding: 5px;
-	height: 20px;
-	line-height: 20px;
-	display: block;
-	text-decoration: none;
-	margin-left: 60px;
+  position: relative;
+  background-color: #e0e0e0;
+  padding: 5px;
+  height: 25px;
+  line-height: 25px;
+  display: block;
+  text-decoration: none;
+  margin-left: 65px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
-.key .key-booked,
-.day .hall.hall-status-booked {
-	background-color: #c0f0c0;
-}
-.key .key-closed,
-.day .hall.hall-status-closed {
-	background-color: #f0c0c0;
-}
-.key .key-open,
-.day .hall.hall-status-open {
-	background-color: #f0f0c0;
-}
-
 .day .hall .time {
-	text-transform: uppercase;
-	color: #202020;
-	font-size: 55%;
-	display: inline-block;
-	vertical-align: middle;
-	font-weight: bold;
+  text-transform: uppercase;
+  color: #202020;
+  font-size: 55%;
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: bold;
 }
-
 .day .hall .hall-capacity-bar {
-	position: absolute;
-	right: 0;
-	top:0;
-	background: rgba(255, 255, 255, 0.5);
-	height: 100%;
-	text-align: right;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0.5);
+  height: 100%;
+  text-align: right;
+}
+.day .hall .hall-capacity {
+  float: right;
+  color: #404040;
+  margin-left: 5px;
+}
+.day .hall.hall-status-booked {
+  background-color: #c0f0c0;
+}
+.day .hall.hall-status-closed {
+  background-color: #f0c0c0;
+}
+.day .hall.hall-status-open {
+  background-color: #f0f0c0;
 }
 .day .fulldate {
-	float: left;
-	height: 50px;
-	padding: 5px;
-	background: #808080;
-	text-align: center;
-	width: 50px;
-	color: white;
+  float: left;
+  height: 55px;
+  padding: 5px;
+  background: #808080;
+  text-align: center;
+  width: 55px;
+  color: white;
 }
-
 .day .fulldate .weekday {
-	display: block;
-	height: 10px;
-	line-height: 10px;
-	font-size: 10px;
+  display: block;
+  height: 10px;
+  line-height: 10px;
+  font-size: 10px;
 }
 .day .fulldate .date {
-	display: block;
-	height: 30px;
-	line-height: 30px;
-	font-size: 30px;
+  display: block;
+  height: 30px;
+  line-height: 30px;
+  font-size: 30px;
 }
 .day .fulldate .month {
-	display: block;
-	height: 10px;
-	line-height: 10px;
-	font-size: 10px;
+  display: block;
+  height: 10px;
+  line-height: 10px;
+  font-size: 10px;
 }
-
-.day .hall .hall-capacity{
-	float: right;
-	color: #404040;
+.day .halls:hover .hall-bookable .hall-capacity {
+  display: none;
 }
-
-.day.nomenu {
-	min-height: 145px;
+.day .halls:hover .hall-bookable.hall-status-open .booking-button-book {
+  display: block;
 }
-
-.booking-button {
-	float: right;
-	display: none;
-	z-index: 2;
-	position: relative;
-	box-sizing: border-box;
-	height: 25px;
-	margin: -2.5px;
+.day .halls:hover .hall-bookable.hall-status-open .booking-button-switch {
+  display: none;
 }
-
-.day        .halls:hover .hall-bookable.hall-status-open   .booking-button-book   { display: block; }
-.day        .halls:hover .hall-bookable.hall-status-open   .booking-button-switch { display: none; }
-.day        .halls:hover .hall-bookable.hall-status-open   .booking-button-cancel { display: none; }
-
-/* Switching not yet implemented */
-.day-booked .halls:hover .hall-bookable.hall-status-open   .booking-button-book   { display: /*none */ block; }
-.day-booked .halls:hover .hall-bookable.hall-status-open   .booking-button-switch { display: /*block */ none; }
-.day-booked .halls:hover .hall-bookable.hall-status-open   .booking-button-cancel { display: none; }
-
-.day-booked .halls:hover .hall-bookable.hall-status-booked .booking-button-book   { display: none; }
-.day-booked .halls:hover .hall-bookable.hall-status-booked .booking-button-switch { display: none; }
-.day-booked .halls:hover .hall-bookable.hall-status-booked .booking-button-cancel { display: block; }
-
-/* Hide capacity when showing booking intent */
-.day        .halls:hover .hall-bookable.hall-status-booked .hall-capacity { display: none; }
-.day        .halls:hover .hall-bookable.hall-status-open   .hall-capacity { display: none; }
-
-
-.attendee-wrapper {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	padding: 5px;
-	background: rgba(192, 192, 192, 0.9);
-    overflow-y: hidden;
-    z-index: 10;
-    font-size: 75%;
-    padding-bottom: 20px;
-    -webkit-transition: all 200ms ease-in-out 0s;
+.day .halls:hover .hall-bookable.hall-status-open .booking-button-cancel {
+  display: none;
 }
-
-.attendee-wrapper div {
-    -webkit-column-fill: auto;
-    -webkit-column-width: 110px;
-    -webkit-column-gap: 10px;
+.day.day-booked .halls:hover .hall-bookable.hall-status-open .booking-button-book {
+  display: block;
 }
-.attendee-wrapper div .friendgroup {
-	margin-bottom: 1em;
-	font-weight: bold;
-	display: block;
+.day.day-booked .halls:hover .hall-bookable.hall-status-open .booking-button-switch {
+  display: none;
 }
-.attendee-wrapper div span.attendee {
-	display: block;
+.day.day-booked .halls:hover .hall-bookable.hall-status-open .booking-button-cancel {
+  display: none;
 }
-
-.attendee-wrapper div span.attendee .guests.detailed {
-	cursor: help;
-	font-weight: bold;
+.day.day-booked .halls:hover .hall-bookable.hall-status-booked .booking-button-book {
+  display: none;
 }
-/*
-.day.nomenu .fulldate {
-	width: 25px;
-	height: 25px;
+.day.day-booked .halls:hover .hall-bookable.hall-status-booked .booking-button-switch {
+  display: none;
 }
-
-.day.nomenu .fulldate .weekday {
-	height: 5px;
-	line-height: 5px;
-	font-size: 5px;
+.day.day-booked .halls:hover .hall-bookable.hall-status-booked .booking-button-cancel {
+  display: block;
 }
-.day.nomenu .fulldate .date {
-	height: 15px;
-	line-height: 15px;
-	font-size: 15px;
+.day.loading {
+  background-image: url('chrome-extension://__MSG_@@extension_id__/ajax-loader.gif');
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
 }
-.day.nomenu .fulldate .month {
-	height: 5px;
-	line-height: 5px;
-	font-size: 5px;
-}*/
-
 .day.day-current {
-	width: 610px;
-	height: 610px;
+  width: 590px;
+  height: 590px;
 }
-
 .day.day-current .menu {
-	width: 610px;
-	font-size: 100%;
+  font-size: 100%;
 }
-
 .day.day-current .fulldate {
-	background: black;
+  background: black;
 }
-
-.day-past {	display: none; }
-.toggle-past-halls-hide { display: none; }
-.past-present-line {
-	display: none;
-	clear: both;
-	margin: 10px -8px 5px;
-	padding: 10px;
-	line-height: 30px;
-	background: #f8f8f8;
-	color: #808080;
-	text-align: center;
+.day.day-past {
+  display: none;
 }
-
-body.show-past-halls .day-past { display: block; }
-body.show-past-halls .toggle-past-halls-hide { display: block; }
-body.show-past-halls .toggle-past-halls-show { display: none; }
-body.show-past-halls .past-present-line { display: block; }
-
-.toggle-past-halls { height: 25px; margin: 2.5px;}
-
+body.show-past-halls .day.day-past {
+  display: block;
+}
 .day.day-past:not(.day-booked) {
-	opacity: 0.25;
+  opacity: 0.25;
 }
 .day.day-past:not(.day-booked):hover {
-	opacity: 1;
+  opacity: 1;
 }
-
+.day.nomenu {
+  min-height: initial;
+}
+.toggle-past-halls-hide {
+  display: none;
+}
+body.show-past-halls .toggle-past-halls-hide {
+  display: block;
+}
+body.show-past-halls .toggle-past-halls-show {
+  display: none;
+}
+body.show-past-halls .past-present-line {
+  display: block;
+}
+.booking-button {
+  float: right;
+  display: none;
+  z-index: 2;
+  position: relative;
+  box-sizing: border-box;
+}
+.halls-1 .booking-button {
+  height: 60px;
+  margin: -2.5px;
+}
+.halls-2 .booking-button {
+  height: 27.5px;
+  margin: -2.5px;
+}
+.halls-3 .booking-button {
+  height: 16.66666667px;
+  margin: -2.5px;
+}
+.attendee-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5px;
+  background: rgba(192, 192, 192, 0.9);
+  overflow-y: hidden;
+  z-index: 10;
+  font-size: 75%;
+  padding-bottom: 20px;
+  -webkit-transition: all 200ms ease-in-out 0s;
+}
+.attendee-wrapper div {
+  -webkit-column-fill: auto;
+  -webkit-column-width: 110px;
+  -webkit-column-gap: 10px;
+}
+.attendee-wrapper div .friendgroup {
+  margin-bottom: 1em;
+  font-weight: bold;
+  display: block;
+}
+.attendee-wrapper div span.attendee {
+  display: block;
+}
+.attendee-wrapper div span.attendee .guests.detailed {
+  cursor: help;
+  font-weight: bold;
+}
+.past-present-line {
+  display: none;
+  clear: both;
+  margin: 10px -8px 5px;
+  padding: 10px;
+  line-height: 30px;
+  background: #f8f8f8;
+  color: #808080;
+  text-align: center;
+}
+.toggle-past-halls {
+  height: 25px;
+  margin: 2.5px;
+}
 .tools {
-	display: block;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	z-index: 10;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
 }
-
 .today-link {
-	padding: 5px;
-	text-decoration: none;
-	background: #c0c0c0;
-	height: 20px;
-	line-height: 20px;
-	float: left;
+  padding: 5px;
+  text-decoration: none;
+  background: #c0c0c0;
+  height: 20px;
+  line-height: 20px;
+  float: left;
 }
-
 .key {
-	float: right;
-	background: white;
-	padding-bottom: 5px;
-	padding-left: 5px;
+  float: right;
+  background: white;
+  padding-bottom: 5px;
+  padding-left: 5px;
 }
-
 .key span {
-	display: inline-block;
-	margin-left: 5px;
-	padding: 5px;
-	text-align: center;
-	height: 20px;
+  display: inline-block;
+  margin-left: 5px;
+  padding: 5px;
+  text-align: center;
+  height: 20px;
 }
-
+.key .key-booked {
+  background-color: #c0f0c0;
+}
+.key .key-closed {
+  background-color: #f0c0c0;
+}
+.key .key-open {
+  background-color: #f0f0c0;
+}
 .custompage {
-	font-family: sans-serif;
-	padding-top: 30px;
+  font-family: sans-serif;
+  padding-top: 30px;
+  margin: 0;
+}
+.days {
+  overflow: hidden;
 }

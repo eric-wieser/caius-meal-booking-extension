@@ -26,7 +26,7 @@
 						<span class="date">{{= date.format("{dd}") }}</span>
 						<span class="month">{{= date.format("{month}") }}</span>
 					</div>
-					<div class="halls">
+					<div class="halls halls-{{= halls.length }}">
 						{{each halls}}
 							<a class='hall hall-status-${$value.status}' href='${$value.url}'>
 								<div class='hall-capacity-bar'
