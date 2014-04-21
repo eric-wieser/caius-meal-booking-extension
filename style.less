@@ -41,13 +41,18 @@
 	min-height: @tile-spacing * 3 + @small-tile-height * 4;
 	float: left;
 	box-shadow: 0px 0px 3px #808080;
+	position: relative;
 	p {
 		margin: 0;
 		padding: 0;
 	}
 	.menus {
-		height: @tile-spacing * 3 + @small-tile-height * 3;
 		overflow-y: auto;
+		top: @small-tile-height;
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
 	}
 	.menu {
 		font-size: 60%;
@@ -201,6 +206,7 @@
 	&.day-current {
 		width:  @small-tile-height*8 + @tile-spacing * 7;
 		height: @small-tile-height*8 + @tile-spacing * 7;
+
 		.menu {
 			font-size: 100%;
 		}
