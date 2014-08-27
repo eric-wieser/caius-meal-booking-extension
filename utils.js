@@ -19,19 +19,23 @@ Date.extend({
 Array.extend({
 	// Behaves like itertools.groupby, maintaining sort order
 	orderedGroupBy: function(map) {
-		var arr = this, result = [], lastKey;
 		var keys = this.map(map);
+
+		var group;
+		var lastKey = function sentinel(){};
 		var overall = [];
 		this.each(function(el, index) {
 			var key = keys[index];
-			if(result.length != 0 && !Object.equal(key, lastKey)) {
-				overall.push([lastKey, result]);
-				result = [];
+
+			// no previous data for this key
+			if(!Object.equal(key, lastKey)) {
+				group = [];
+				overall.push([key, group]);
 			}
+
+			group.push(el);
 			lastKey = key;
-			result.push(el);
 		});
-		overall.push([lastKey, result]);
 
 		return overall;
 	},
