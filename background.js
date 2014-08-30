@@ -71,6 +71,23 @@ var hallNameLoad = loggedIn
 		return titles.filter(function(x) { return x; });
 	});
 
+var lessCompiled = (function() {
+	var parser = new(less.Parser)({
+		paths: ['.'], // Specify search paths for @import directives
+		filename: 'style-wrapper.less' // Specify a filename, for better error messages
+	});
+
+	return $.get(chrome.extension.getURL('style.less')).then(function(lessStyle) {
+		var d = $.Deferred();
+		parser.parse(lessStyle, function (err, tree) {
+			if (err) {
+				return d.reject(err);
+			}
+			d.resolve(tree.toCSS());
+		});
+		return d.promise();
+	});
+})();
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	loggedIn.resolve();
@@ -101,6 +118,11 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	}
 	else if(request.action == 'loadHallTypes') {
 		hallNameLoad.then(function(x) {
+			sendResponse(x);
+		});
+	}
+	else if(request.action == 'getLess') {
+		lessCompiled.then(function(x) {
 			sendResponse(x);
 		});
 	}

@@ -15,10 +15,13 @@ var friendLoader = $.defer(Object.method(chrome.storage.sync, 'get'), "friends")
 $.when(
 	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getTemplates'}),
 	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getPreferences'}),
+	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getLess'}),
 	$.defer($(document).ready)
-).then(function domLoaded(templates, preferences) {
+).then(function domLoaded(templates, preferences, less) {
 
 	console.log(preferences);
+
+	var css = $("<style>").html(less).appendTo(document.head);
 
 	if(preferences.vegetarian)
 		$('body').addClass('diet-vegetarian');
