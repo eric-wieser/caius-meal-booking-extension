@@ -221,14 +221,16 @@ $.when(
 		var oldLoaded = false;
 		toolbar.find('.toggle-past-halls').click(function() {
 			if(!oldLoaded) {
-				var ppl = $('<div>').addClass('past-present-line').text("Previous halls")
-				ppl.insertAfter(toolbar);
+				var ppl = $('<div>').addClass('past-present-line').text("Previous halls");
+				var oldDaysElem = $('<div>').addClass('old-days');
+				oldDaysElem.insertAfter(toolbar);
+				ppl.insertAfter(oldDaysElem);
 				HallSummary.loadAll({to: new Date().addDays(-1)}).done(function(all) { all
 					.sortBy('date')
 					.orderedGroupBy('date')
 					.starMap(generateDayElement)
 					.each(function(dayElem) {
-						dayElem.insertBefore(ppl);
+						oldDaysElem.append(dayElem);
 					});
 				});
 				oldLoaded = true;
