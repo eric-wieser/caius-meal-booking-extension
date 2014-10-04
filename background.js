@@ -6,7 +6,7 @@ function pingAnalytics(d) {
 	var crsid = /\((.+)\)/.exec(user)[1];
 	var version = chrome.app.getDetails().version;
 
-	$.getJSON('http://efw27.user.srcf.net:8090/ping', {from: crsid, v: version});
+	$.getJSON('http://meals.efw27.user.srcf.net:8989/ping', {from: crsid, v: version});
 }
 
 var profilePageLoad = loggedIn
