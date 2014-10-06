@@ -104,12 +104,12 @@ $.when(
 					if(hall.attendees.length) {
 						list = $('<div>').hide();
 
-						// convert to a set
-						var attendeeSet = {};
-						var outputSet = {};
+						var lookup = {};
 						hall.attendees.each(function(a) {
-							attendeeSet[a.name] = a;
+							lookup[a.name] = a;
+							lookup[a.crsid] = a;
 						});
+						var hasOutput = {};
 
 						var makeName = function(o) {
 							var e = $('<span>').addClass('attendee').text(o.name);
@@ -125,17 +125,18 @@ $.when(
 						// output each friend group
 						friends.each(function(group) {
 							var friendsElem;
-							group.each(function(f) {
-								if(attendeeSet[f]) {
+							group.each(function(nameOrCrsid) {
+								var f = lookup[nameOrCrsid];
+								if(f) {
 									if(!friendsElem)
 										friendsElem = $('<span>').addClass('friendgroup').appendTo(list);
-									makeName(attendeeSet[f]).appendTo(friendsElem);
-									outputSet[f] = true;
+									makeName(f).appendTo(friendsElem);
+									hasOutput[f.crsid] = true;
 								}
 							});
 						});
 						hall.attendees.each(function(a) {
-							if(!outputSet[a.name])
+							if(!hasOutput[a.crsid])
 								makeName(a).appendTo(list);
 						});
 						list.appendTo(attendeeWrapper);
