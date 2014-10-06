@@ -38,7 +38,14 @@ $.when(
 		$('table.form').append(
 			$('<tr>').append(
 				$('<th>').append(
-					$('<label>').attr('for', 'friends').text('Friends:')
+					$('<label>').attr('for', 'friends').text('Friends:'),
+					$('<div>').css({'font-weight': 'normal'}).append(
+						'One per line, crsids or names',
+						$('<br>'),
+						'Add blank lines for groups',
+						$('<br>'),
+						'Stored securely with your google account'
+					)
 				),
 				$('<td>').append(
 					friendsElem = $('<textarea>').attr('cols', 40). attr('rows', 40).attr('name', 'friends').prop('disabled', true)
