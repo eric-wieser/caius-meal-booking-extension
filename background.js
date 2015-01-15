@@ -42,7 +42,21 @@ var normalizeName = function(name) {
 
 var hallNameLoad = loggedIn
 	.then(function() {
-		var pageLoaders = Number.range(256, 409).every().map(function(i) {
+
+		var bookingIDs = [];
+		$(".list a").each (function()
+		{
+			var thisEventURL = $(this).attr("href");
+			if (thisEventURL[1] == "h") return;
+			var thisEventID = thisEventURL.substring(7,10);
+			bookingIDs.append(parseInt(thisEventID));
+		})
+
+		var minID = min(bookingIDs);
+		var maxID = max(bookingIDs);
+
+
+		var pageLoaders = Number.range(minID, maxID).every().map(function(i) {
 			return $.get('https://www.mealbookings.cai.cam.ac.uk/index.php', {event: i}).then(function(d) {
 				var header = $(d).find('h1');
 				var title = header.text();
