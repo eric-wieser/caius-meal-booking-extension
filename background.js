@@ -42,7 +42,7 @@ var normalizeName = function(name) {
 
 var hallNameLoad = loggedIn
 	.then(function() {
-		var pageLoaders = Number.range(256, 400).every().map(function(i) {
+		var pageLoaders = Number.range(256, 409).every().map(function(i) {
 			return $.get('https://www.mealbookings.cai.cam.ac.uk/index.php', {event: i}).then(function(d) {
 				var header = $(d).find('h1');
 				var title = header.text();
