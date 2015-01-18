@@ -115,6 +115,26 @@ HallSummary.prototype.loadAttendees = function() {
 		return self.attendees;
 	}).promise();
 };
+HallSummary.prototype.loadWaitList = function() {
+	var self = this;
+	return this.loadPage().then(function($doc) {
+		var listElem = $doc
+			.find('h2')
+			.filter(function() {
+				return $(this).text().startsWith('Waiting list');
+			})
+			.next('table')
+			.eq(0);
+
+		return listElem.find('tr').map(function() {
+			var cells = $(this).find('td')
+			return {
+				n: +cells.eq(0).text().match(/^\d+/)[0],
+				pos: +cells.eq(1).text().match(/^\d+/)[0]
+			}
+		}).get();
+	}).promise();
+};
 
 /* Possible booking messages:
 update:

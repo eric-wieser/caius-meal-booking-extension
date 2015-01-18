@@ -151,6 +151,12 @@ $.when(
 					if(isBookable)
 						hallElem.addClass('hall-bookable');
 				});
+				hall.loadWaitList().then(function(waitlist) {
+					if(waitlist.length) {
+						hallElem.addClass('hall-on-waiting-list');
+						hallElem.attr('title', waitlist[0].pos.ordinalize() + ' on waiting list');
+					}
+				});
 				hallElem.find('.booking-button-book').on('click', function() {
 					hall.makeBooking(preferences).then(function() {
 						location.reload();

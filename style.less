@@ -1,6 +1,13 @@
 @booked-color: #c0f0c0;
 @closed-color: #f0c0c0;
 @open-color:   #f0f0c0;
+@open-stripes: repeating-linear-gradient(
+	45deg,
+	@booked-color,
+	@booked-color 11.31px,
+	transparent 11.31px,
+	transparent 22.62px
+);
 
 @small-tile-height: 65px;
 @tile-spacing: 10px;
@@ -148,6 +155,9 @@
 		&.hall-status-booked { background-color: @booked-color; }
 		&.hall-status-closed { background-color: @closed-color; }
 		&.hall-status-open   { background-color: @open-color;   }
+		&.hall-on-waiting-list {
+			background-image: @open-stripes;
+		}
 	}
 	.fulldate {
 		float: left;
@@ -336,6 +346,10 @@ body.show-past-halls {
 	.key-booked { background-color: @booked-color; }
 	.key-closed { background-color: @closed-color; }
 	.key-open   { background-color: @open-color;   }
+	.key-waiting {
+		background-color: @closed-color;
+		background-image: @open-stripes;
+	}
 }
 .custompage {
 	font-family: sans-serif;
