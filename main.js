@@ -192,7 +192,7 @@ $.when(
 						hasMenu = true;
 					}
 				} else {
-						var wrapper = $('<div>').addClass('menus').appendTo(dayElem);
+					var wrapper = $('<div>').addClass('menus').appendTo(dayElem);
 					halls.each(function(h) {
 						if(h.menu) {
 							hasMenu = true;

@@ -89,7 +89,8 @@ HallSummary.prototype.loadAttendees = function() {
 		var error = $doc.find('.error');
 		if(error.size())
 			return $.Deferred().reject(error);
-			self.attendees = [];
+
+		self.attendees = [];
 
 		var attendees = $doc.find('.list');
 		if(attendees.size() == 1 && attendees.find('tr').find('td').size() == 1) {
