@@ -24,7 +24,7 @@ var parseMenu = function(type, mHtml) {
 		return s.replace(/\([^)]+\)/, function(l) { return l.replace(/\s+/g, ' ') });
 	});
 
-	var vegCourses = courses[courses.length - 1].split(/\n+Vegetarian\s*(?:-\s*\n?|\n)/);
+	var vegCourses = courses[courses.length - 1].split(/\n+Vegetarian:?\s*(?:-\s*\n?|\n)/i);
 	if(vegCourses.length > 1) {
 		courses[courses.length - 1] = vegCourses[0];
 
