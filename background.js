@@ -42,7 +42,28 @@ var normalizeName = function(name) {
 
 var hallNameLoad = loggedIn
 	.then(function() {
-		var pageLoaders = Number.range(256, 400).every().map(function(i) {
+		return $.get('https://www.mealbookings.cai.cam.ac.uk/');
+	})
+	.then(function(mainPage) {
+
+		var bookingIDs = [];
+
+		$(mainPage).find(".list a").each (function()
+		{
+			var thisEventURL = $(this).attr("href");
+			if (thisEventURL[1] == "h") return;
+			var thisEventID = thisEventURL.substring(7,10);
+			bookingIDs.push(parseInt(thisEventID));
+			console.log(bookingIDs);
+		})
+
+		console.log(bookingIDs);
+
+		console.log("Scope 2");
+		console.log(bookingIDs);
+		var pageLoaders = bookingIDs.map(function(i) {
+
+			console.log(i); //remove
 			return $.get('https://www.mealbookings.cai.cam.ac.uk/index.php', {event: i}).then(function(d) {
 				var header = $(d).find('h1');
 				var title = header.text();
@@ -62,6 +83,7 @@ var hallNameLoad = loggedIn
 				});
 
 				return {id: i, name: normalizeName(title), description: description, data: data}
+				
 			})
 		});
 		return $.whenAll(pageLoaders)
