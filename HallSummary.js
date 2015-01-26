@@ -16,7 +16,7 @@ var parseMenu = function(type, mHtml) {
 
 	var courses = lines
 		.join('\n')
-		.split('\n*\n')
+		.split(/\n\*+\n/)
 		.map(function(c) { return c.trim(); });
 
 	// remove obvious line wrapping
@@ -24,7 +24,7 @@ var parseMenu = function(type, mHtml) {
 		return s.replace(/\([^)]+\)/, function(l) { return l.replace(/\s+/g, ' ') });
 	});
 
-	var vegCourses = courses[courses.length - 1].split(/\n+Vegetarian:?\s*(?:-\s*\n?|\n)/i);
+	var vegCourses = courses[courses.length - 1].split(/\n+vegetarian:?\s*(?:-\s*\n?|\n)/i);
 	if(vegCourses.length > 1) {
 		courses[courses.length - 1] = vegCourses[0];
 
