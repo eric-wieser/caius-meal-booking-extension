@@ -60,7 +60,7 @@ $.when(
 		$('form').submit(function() {
 			friendsElem.removeAttr('name');
 			var friends = friendsElem.val().trim()
-				.split('\n\n')
+				.split(/\n{2,}/)
 				.map(function(x) {
 					return x.split('\n');
 				});
