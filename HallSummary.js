@@ -16,7 +16,7 @@ var parseMenu = function(type, mHtml) {
 
 	var courses = lines
 		.join('\n')
-		.split(/\n\*+\n/)
+		.split(/\n[\*_]+\n/)
 		.map(function(c) { return c.trim(); });
 
 	// remove obvious line wrapping
