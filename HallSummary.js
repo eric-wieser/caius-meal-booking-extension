@@ -44,8 +44,8 @@ var parseMenu = function(type, mHtml) {
 // HallSummary class
 var HallSummary = function(type) {
 	this.date = null;
-	this.capacity = 0;
-	this.available = 0;
+	this.capacity = NaN;
+	this.available = NaN;
 	this.status = 'unknown';
 	this.type = type;
 }

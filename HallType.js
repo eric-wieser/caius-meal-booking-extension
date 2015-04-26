@@ -42,15 +42,11 @@ HallType.prototype.loadHalls = function(opts) {
 		}
 
 		var parseFullness = function(summary, str) {
-
-			var fullnessParts = /\((-?\d+)\/(\d+)\)/.exec(str)
+			var fullnessParts = /\((-?\d+)\/(\d+)\)/.exec(str);
 			try {
 				summary.capacity = parseInt(fullnessParts[2]);
 				summary.available = parseInt(fullnessParts[1]);
-			} catch(e) {
-				summary.capacity = NaN;
-				summary.available = NaN;
-			};
+			} catch(e) { }
 		}
 
 		var parseStatus = function(summary, str) {
