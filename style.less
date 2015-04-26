@@ -1,6 +1,6 @@
-@booked-color: #c0f0c0;
-@closed-color: #f0c0c0;
-@open-color:   #f0f0c0;
+@booked-color: #4CAF50;
+@closed-color: #F44336;
+@open-color:   #FFEB3B;
 @open-stripes: repeating-linear-gradient(
 	45deg,
 	@booked-color,
@@ -43,11 +43,11 @@
 }
 .day {
 	margin: @tile-spacing / 2;
-	background: #f8f8f8;
+	background: white;
 	width: @tile-spacing * 3 + @small-tile-height * 4;
 	min-height: @tile-spacing * 3 + @small-tile-height * 4;
 	float: left;
-	box-shadow: 0px 0px 3px #808080;
+	box-shadow: rgba(0, 0, 0, 0.156863) 0px 0px 3px 0px, rgba(0, 0, 0, 0.317647) 0px 3px 6px 0px;
 	position: relative;
 	p {
 		margin: 0;
@@ -120,13 +120,14 @@
 	}
 	.hall {
 		position: relative;
-		background-color: #e0e0e0;
+		background-color: rgb(246, 246, 246);
 		padding: 5px;
 		height: 25px;
 		line-height: 25px;
 		display: block;
 		text-decoration: none;
 		margin-left: @small-tile-height;
+		z-index: 0;
 		.time {
 			text-transform: uppercase;
 			color: #202020;
@@ -137,6 +138,7 @@
 		}
 		.hall-capacity-bar {
 			position: absolute;
+			z-index: -1;
 			right: 0;
 			top:0;
 			background: rgba(255, 255, 255, 0.5);
@@ -163,10 +165,10 @@
 		float: left;
 		height: @small-tile-height - 10px;
 		padding: 5px;
-		background: #808080;
+		// background: #808080;
 		text-align: center;
 		width: @small-tile-height - 10px;
-		color: white;
+		// color: white;
 		.weekday {
 			display: block;
 			height: 10px;
@@ -221,7 +223,7 @@
 			font-size: 100%;
 		}
 		.fulldate {
-			background: black;
+			// background: black;
 		}
 	}
 
@@ -240,6 +242,15 @@
 	&.nomenu {
 		min-height: initial;
 	}
+
+	.header {
+		background-color: rgb(246, 246, 246);
+		border-bottom: 1px solid rgb(229, 229, 229);
+		margin-bottom: -1px;
+	}
+	&.day-some-hall-status-closed .header { border: none; margin: 0; background-color: @closed-color; }
+	&.day-some-hall-status-open .header { border: none; margin: 0; background-color: @open-color; }
+	&.day-some-hall-status-booked .header { border: none; margin: 0; background-color: @booked-color; }
 }
 
 .toggle-past-halls-hide { display: none; }
@@ -272,12 +283,13 @@ body.show-past-halls {
 	}
 }
 .attendee-wrapper {
+	box-shadow: rgba(0, 0, 0, 0.156863) 0px 0px 6px 0px, rgba(0, 0, 0, 0.317647) 0px 6px 12px 0px;
 	position: fixed;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	padding: 5px;
-	background: rgba(192, 192, 192, 0.9);
+	background: white;
 	overflow-y: hidden;
 	z-index: 10;
 	font-size: 75%;
@@ -355,4 +367,5 @@ body.show-past-halls {
 	font-family: sans-serif;
 	padding-top: 30px;
 	margin: 0;
+	background: rgb(236, 236, 236);
 }

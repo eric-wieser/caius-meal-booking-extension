@@ -21,27 +21,33 @@
 			</div>
 
 			<div data-name="day">
-				<div class="day loading">
-					<div class='fulldate'>
-						<span class="weekday">{{= date.format("{weekday}") }}</span>
-						<span class="date">{{= date.format("{dd}") }}</span>
-						<span class="month">{{= date.format("{month}") }}</span>
-					</div>
-					<div class="halls halls-{{= halls.length }}">
-						{{each halls}}
-							<a class='hall hall-status-${$value.status}' href='${$value.url}'>
-								<div class='hall-capacity-bar'
-								     style='width: {{= 100 * $value.available/$value.capacity}}%'>
-								</div>
-								<button class="booking-button booking-button-book">book</button>
-								<button class="booking-button booking-button-switch">switch</button>
-								<button class="booking-button booking-button-cancel">cancel</button>
-								<span class='hall-capacity'>
-									${$value.available} / ${$value.capacity}
-								</span>
-								<span class="time">${$value.type.data.time}</span> ${$value.type.name}
-							</a>
-						{{/each}}
+				<div class="day loading {{each halls}} day-some-hall-status-${$value.status} {{/each}}">
+					<div class="header">
+						<div class='fulldate'>
+							<span class="weekday">{{= date.format("{weekday}") }}</span>
+							<span class="date">{{= date.format("{dd}") }}</span>
+							<span class="month">{{= date.format("{month}") }}</span>
+						</div>
+						<div class="halls halls-{{= halls.length }}">
+							{{each halls}}
+								<a class='hall hall-status-${$value.status}' title="${$value.status}" href='${$value.url}'>
+									{{if !(isNaN($value.capacity))}}
+										<div class='hall-capacity-bar'
+										     style='width: {{= 100 * $value.available/$value.capacity}}%'>
+										</div>
+									{{/if}}
+									<button class="booking-button booking-button-book">book</button>
+									<button class="booking-button booking-button-switch">switch</button>
+									<button class="booking-button booking-button-cancel">cancel</button>
+									{{if !(isNaN($value.capacity))}}
+										<span class='hall-capacity'>
+											${$value.available} / ${$value.capacity}
+										</span>
+									{{/if}}
+									<span class="time">${$value.type.data.time}</span> ${$value.type.name}
+								</a>
+							{{/each}}
+						</div>
 					</div>
 				</div>
 			</div>
