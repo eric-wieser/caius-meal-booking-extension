@@ -3,13 +3,6 @@
 		<div id="templates">
 			<div data-name="toolbar">
 				<div class='tools'>
-					<div class='key'>
-						Key:
-						<span class='key-open'>open</span>
-						<span class='key-booked'>booked</span>
-						<span class='key-waiting'>on waiting list</span>
-						<span class='key-closed'>closed</span>
-					</div>
 
 					<a class='today-link' href='#today'>today</a>
 					<button class="toggle-past-halls">
@@ -17,6 +10,13 @@
 						<span class="toggle-past-halls-hide">Hide past halls</span>
 					</button>
 
+				</div>
+				<div class='key'>
+					Key:
+					<span class='key-open'>open</span>
+					<span class='key-booked'>booked</span>
+					<span class='key-waiting'>on waiting list</span>
+					<span class='key-closed'>closed</span>
 				</div>
 			</div>
 
@@ -30,7 +30,7 @@
 						</div>
 						<div class="halls halls-{{= halls.length }}">
 							{{each halls}}
-								<a class='hall hall-status-${$value.status}' title="${$value.status}" href='${$value.url}'>
+								<a class='hall hall-status-${$value.status}' href='${$value.url}'>
 									{{if !(isNaN($value.capacity))}}
 										<div class='hall-capacity-bar'
 										     style='width: {{= 100 * $value.available/$value.capacity}}%'>
