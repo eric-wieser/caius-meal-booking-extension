@@ -1,6 +1,6 @@
-@booked-color: #4CAF50;
-@closed-color: #F44336;
-@open-color:   #FFEB3B;
+@booked-color: #AED581;
+@closed-color: #E57373;
+@open-color:   #FFF176;
 @open-stripes: repeating-linear-gradient(
 	45deg,
 	@booked-color,
@@ -128,6 +128,7 @@
 		text-decoration: none;
 		margin-left: @small-tile-height;
 		z-index: 0;
+		color: inherit;
 		.time {
 			text-transform: uppercase;
 			color: #202020;
@@ -248,9 +249,18 @@
 		border-bottom: 1px solid rgb(229, 229, 229);
 		margin-bottom: -1px;
 	}
-	&.day-some-hall-status-closed .header { border: none; margin: 0; background-color: @closed-color; }
-	&.day-some-hall-status-open .header { border: none; margin: 0; background-color: @open-color; }
-	&.day-some-hall-status-booked .header { border: none; margin: 0; background-color: @booked-color; }
+	&.day-some-hall-status-closed .header {
+		border: none; margin: 0;
+		background-color: @closed-color;
+	}
+	&.day-some-hall-status-open .header {
+		border: none; margin: 0;
+		background-color: @open-color;
+	}
+	&.day-some-hall-status-booked .header {
+		border: none; margin: 0;
+		background-color: @booked-color;
+	}
 }
 
 .toggle-past-halls-hide { display: none; }
