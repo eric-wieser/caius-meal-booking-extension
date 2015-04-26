@@ -83,7 +83,7 @@ $.when(
 
 		function generateDayElement(date, halls) {
 			// sort formals and firsts
-			halls = halls.sortBy(function(h) { return h.type.id; });
+			halls = halls.sortBy(function(h) { return h.type.data.time; });
 
 			// populate the template
 			var dayElem = $.tmpl("dayTemplate", {date: date, halls: halls});
