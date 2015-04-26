@@ -51,45 +51,31 @@ HallType.prototype.loadHalls = function(opts) {
 
 		var parseStatus = function(summary, str) {
 			str = str.trim();
-			if(str == '(signup deadline has passed)')
+			if(/\(signup deadline has passed\)/.test(str))
 				summary.status = 'closed';
-			else if(str == '(signup has not yet opened)')
+			else if(/\(signup has not yet opened\)/.test(str))
 				summary.status = 'unopened';
-			else if(str == '')
-				summary.status = 'open';
-			else
-				summary.status = str;
 		}
 
+		var parseCells = function(s, cells) {
+			parseDate(s, cells.eq(0).text());
+			var rest = cells.slice(1).text();
+			parseFullness(s, rest);
+			parseStatus(s, rest);
+			if(!s.invalid)
+				return s;
+		};
 
 		var results = [].concat(
 			bookedRows.map(function() {
-				var cells = $(this).find('td');
 				var s = new HallSummary(type);
-				parseDate(s, cells.eq(0).text());
-				if(cells.size() > 2) {
-					parseFullness(s, cells.eq(2).text());
-				}
-				else {
-					parseStatus(s, cells.eq(1).text());
-				}
-				s.status = 'booked'
-				if(!s.invalid)
-					return s;
+				s.status = 'booked';
+				return parseCells(s, $(this).find('td'));
 			}).get(),
 			unbookedRows.map(function() {
 				var s = new HallSummary(type);
-				var cells = $(this).find('td');
-				parseDate(s, cells.eq(0).text());
-				if(cells.size() > 2) {
-					parseFullness(s, cells.eq(1).text());
-					parseStatus(s, cells.eq(2).text());
-				}
-				else {
-					parseStatus(s, cells.eq(1).text());
-				}
-				if(!s.invalid)
-					return s;
+				s.status = 'open';
+				return parseCells(s, $(this).find('td'));
 			}).get()
 		)
 		return results;
