@@ -67,7 +67,12 @@ HallType.prototype.loadHalls = function(opts) {
 				var cells = $(this).find('td');
 				var s = new HallSummary(type);
 				parseDate(s, cells.eq(0).text());
-				parseFullness(s, cells.eq(2).text());
+				if(cells.size() > 2) {
+					parseFullness(s, cells.eq(2).text());
+				}
+				else {
+					parseStatus(s, cells.eq(1).text());
+				}
 				s.status = 'booked'
 				if(!s.invalid)
 					return s;
@@ -76,8 +81,13 @@ HallType.prototype.loadHalls = function(opts) {
 				var s = new HallSummary(type);
 				var cells = $(this).find('td');
 				parseDate(s, cells.eq(0).text());
-				parseFullness(s, cells.eq(1).text());
-				parseStatus(s, cells.eq(2).text());
+				if(cells.size() > 2) {
+					parseFullness(s, cells.eq(1).text());
+					parseStatus(s, cells.eq(2).text());
+				}
+				else {
+					parseStatus(s, cells.eq(1).text());
+				}
 				if(!s.invalid)
 					return s;
 			}).get()
