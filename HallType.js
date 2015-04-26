@@ -47,7 +47,10 @@ HallType.prototype.loadHalls = function(opts) {
 			try {
 				summary.capacity = parseInt(fullnessParts[2]);
 				summary.available = parseInt(fullnessParts[1]);
-			} catch(e) {};
+			} catch(e) {
+				summary.capacity = NaN;
+				summary.available = NaN;
+			};
 		}
 
 		var parseStatus = function(summary, str) {
