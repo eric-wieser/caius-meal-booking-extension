@@ -134,6 +134,10 @@
 		height: @small-tile-height / 3 - 10px;
 		line-height: @small-tile-height / 3 - 10px;
 	}
+	.halls-4 .hall {
+		height: (2*@small-tile-height + @tile-spacing) / 4 - 10px;
+		line-height: (2*@small-tile-height + @tile-spacing) / 4 - 10px;
+	}
 	.hall {
 		position: relative;
 		background-color: rgb(246, 246, 246);
@@ -180,8 +184,8 @@
 	}
 	.fulldate {
 		float: left;
-		height: @small-tile-height - 10px;
-		padding: 5px;
+		height: 50px;
+		padding: (@small-tile-height - 50px)/2 5px;
 		// background: #808080;
 		text-align: center;
 		width: @small-tile-height - 10px;
@@ -305,6 +309,10 @@ body.show-past-halls {
 	}
 	.halls-3 & {
 		height: @small-tile-height / 3 - 5px;
+		margin: -2.5px;
+	}
+	.halls-4 & {
+		height: (2*@small-tile-height + @tile-spacing) / 4 - 5px;
 		margin: -2.5px;
 	}
 }
