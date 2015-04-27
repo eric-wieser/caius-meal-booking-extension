@@ -12,7 +12,6 @@
 @small-tile-height: 65px;
 @tile-spacing: 10px;
 
-
 .menu {
 	float: left;
 	text-align: center;
@@ -40,6 +39,23 @@
 			font-size: 75%;
 		}
 	}
+}
+
+.width-step(@w; @extra) {
+	@media (min-width: (@w + @extra)) { width: @w; }
+}
+
+.days {
+	overflow: hidden;
+	margin: auto;
+	@border: 20px;
+	@tile-width: (@tile-spacing + @small-tile-height) * 4;
+	.width-step(2 * @tile-width, 2*@border);
+	.width-step(3 * @tile-width, 2*@border);
+	.width-step(4 * @tile-width, 2*@border);
+	.width-step(5 * @tile-width, 2*@border);
+	.width-step(6 * @tile-width, 2*@border);
+	.width-step(7 * @tile-width, 2*@border);
 }
 .day {
 	margin: @tile-spacing / 2;
