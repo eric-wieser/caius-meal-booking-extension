@@ -81,18 +81,16 @@ var hallNameLoad = loggedIn
 	});
 
 var lessCompiled = (function() {
-	var parser = new(less.Parser)({
-		paths: ['.'], // Specify search paths for @import directives
-		filename: 'style-wrapper.less' // Specify a filename, for better error messages
-	});
-
 	return $.get(chrome.extension.getURL('style.less')).then(function(lessStyle) {
 		var d = $.Deferred();
-		parser.parse(lessStyle, function (err, tree) {
+		less.render(lessStyle, {
+			paths: ['.'], // Specify search paths for @import directives
+			filename: 'style-wrapper.less' // Specify a filename, for better error messages
+		}, function (err, out) {
 			if (err) {
 				return d.reject(err);
 			}
-			d.resolve(tree.toCSS());
+			d.resolve(out.css);
 		});
 		return d.promise();
 	});
