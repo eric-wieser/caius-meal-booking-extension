@@ -30,21 +30,22 @@
 						</div>
 						<div class="halls halls-{{= halls.length }}">
 							{{each halls}}
-								<a class='hall hall-status-${$value.status}' href='${$value.url}'>
+								<a class='hall hall-status-${$value.status}' href='${$value.url}' target="_blank">
 									{{if !(isNaN($value.capacity))}}
 										<div class='hall-capacity-bar'
 										     style='width: {{= 100 * $value.available/$value.capacity}}%'>
 										</div>
 									{{/if}}
-									<button class="booking-button booking-button-book">book</button>
-									<button class="booking-button booking-button-switch">switch</button>
-									<button class="booking-button booking-button-cancel">cancel</button>
+									<span class="time">${$value.type.data.time}</span>
+									<span class="name">${$value.type.name}</span>
 									{{if !(isNaN($value.capacity))}}
 										<span class='hall-capacity'>
 											${$value.available} / ${$value.capacity}
 										</span>
 									{{/if}}
-									<span class="time">${$value.type.data.time}</span> ${$value.type.name}
+									<button class="booking-button booking-button-book">book</button>
+									<button class="booking-button booking-button-switch">switch</button>
+									<button class="booking-button booking-button-cancel">cancel</button>
 								</a>
 							{{/each}}
 						</div>

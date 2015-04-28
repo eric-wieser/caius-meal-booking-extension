@@ -148,8 +148,10 @@ $.when(
 					});
 				});
 				hall.loadBookableness().then(function(isBookable) {
-					if(isBookable)
+					if(isBookable) {
 						hallElem.addClass('hall-bookable');
+						dayElem.addClass('some-hall-bookable');
+					}
 				});
 				hall.loadWaitList().then(function(waitlist) {
 					if(waitlist.length) {
