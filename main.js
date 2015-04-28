@@ -160,7 +160,11 @@ $.when(
 					}
 				});
 				hallElem.find('.booking-button-book').on('click', function() {
-					hall.makeBooking(preferences).then(function() {
+					var prefs = $.extend({}, preferences);
+					if($(this).is('.booking-button-vegetarian'))
+						prefs.vegetarian = true;
+
+					hall.makeBooking(prefs).then(function() {
 						location.reload();
 					});
 					return false;
