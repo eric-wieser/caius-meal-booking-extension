@@ -27,10 +27,8 @@ $.when(
 		$('body').addClass('diet-vegetarian');
 
 	// Add sidebar link
-	$('.sidebar ul li:last-child').before(
-		$('<li>').append(
-			$('<a>').attr('href', '/menus').text('Summary')
-		)
+	$('.topbar a:last-child').before(
+		$('<a>').attr('href', '/menus').text('Summary')
 	);
 
 	if(location.pathname == '/profile.php') {

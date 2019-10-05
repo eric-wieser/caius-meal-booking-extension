@@ -2,7 +2,7 @@ var loggedIn = $.Deferred();
 
 
 function pingAnalytics(d) {
-	var user = $(d).find('.login_body').first().text();
+	var user = $(d).find('.login_footer').first().text();
 	var crsid = /\((.+)\)/.exec(user)[1];
 	var version = chrome.app.getDetails().version;
 

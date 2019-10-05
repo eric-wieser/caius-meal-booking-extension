@@ -74,7 +74,7 @@ HallSummary.prototype.loadMenu = function() {
 		if(error.size())
 			return $.Deferred().reject(error);
 
-		var menu = $doc.find('.menu');
+		var menu = $doc.find('.message .announcement');
 		if(menu.size()) {
 			menu = parseMenu(self.type, menu.html());
 			self.menu = menu;

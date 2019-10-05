@@ -34,7 +34,7 @@ HallType.prototype.loadHalls = function(opts) {
 		var unbookedRows = tables.eq(1).find('tr').slice(1, -1);
 
 		var parseDate = function(summary, str) {
-			if(str.trim() == "No current bookings found.") {
+			if(str.trim() == "No current bookings found") {
 				summary.invalid = true;
 				return;
 			}
