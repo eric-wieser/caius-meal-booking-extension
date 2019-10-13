@@ -8,7 +8,6 @@ var profilePageLoad = loggedIn
 
 var profileLoad = profilePageLoad
 	.then(function(data) {
-		pingAnalytics(data);
 		return {
 			vegetarian: $(data).find('input[name=vegetarian]').prop('checked'),
 			requirements: $(data).find('input[name=requirements]').val(),
@@ -34,12 +33,40 @@ var normalizeName = function(name) {
 	return name;
 }
 
-var hallNameLoad = loggedIn
+var hallPageLoad = loggedIn
 	.then(function() {
 		return $.get('https://www.mealbookings.cai.cam.ac.uk/');
 	})
 	.then(function(mainPage) {
-		var bookingIds = $(mainPage).find(".list a").map(function() {
+		return $(mainPage);
+	})
+
+var messagesLoad = hallPageLoad
+	.then(function($mainPage) {
+		return $mainPage.find('.message .announcement');
+	});
+
+var allergensLoad = messagesLoad
+	.then(function($messages) {
+		return Object.merge.apply(
+			null,
+			$messages.filter(function() {
+				return $(this).text().includes('allergens');
+			}).map(function() {
+				let re = /^([A-Z]+)= (.*)$/gm;
+				let text = $(this).text();
+				let mapping = {}
+				for (let match; (match = re.exec(text)) !== null;) {
+					mapping[match[1]] = match[2]
+				}
+				return mapping;
+			}).get()
+		);
+	})
+
+var hallNameLoad = hallPageLoad
+	.then(function($mainPage) {
+		var bookingIds = $mainPage.find(".list a").map(function() {
 			var m = /\?event=(\d+)/.exec($(this).attr('href'));
 			if(m)
 				return +m[1];
@@ -114,6 +141,11 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	}
 	else if(request.action == 'getPreferences') {
 		profileLoad.then(function(x) {
+			sendResponse(x);
+		});
+	}
+	else if(request.action == 'getAllergens') {
+		allergensLoad.then(function(x) {
 			sendResponse(x);
 		});
 	}

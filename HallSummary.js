@@ -7,7 +7,14 @@ var parseMenu = function(type, mHtml) {
 	var lines = mHtml
 		.replace(/\n/g, ' ')
 		.split(/<br(?: ?\/?)>/g)
-		.map(function(l) { return l.trim(); });
+		.map(function(l) { return l.trim(); })
+		.map(function(l) {
+			return l.replace(/\([A-Z]+(?:,[A-Z]+)*\)/g, function(m) {
+				return m.replace(/[A-Z]+/g, function(m) {
+					return '<abbr class="allergen">' + m + '</abbr>';
+				});
+			});
+		});
 
 	if(type.name != 'cafeteria' && lines[1] == '') {
 		lines[1] = '*';

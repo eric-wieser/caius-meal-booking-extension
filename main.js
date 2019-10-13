@@ -16,8 +16,9 @@ $.when(
 	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getTemplates'}),
 	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getPreferences'}),
 	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getLess'}),
+	$.defer(Object.method(chrome.extension, 'sendRequest'), {action: 'getAllergens'}),
 	$.defer($(document).ready)
-).then(function domLoaded(templates, preferences, less) {
+).then(function domLoaded(templates, preferences, less, allergens) {
 
 	console.log(preferences);
 
@@ -202,7 +203,6 @@ $.when(
 						hasMenu = true;
 					}
 				} else {
-					var wrapper = $('<div>').addClass('menus').appendTo(dayElem);
 					halls.each(function(h) {
 						if(h.menu) {
 							hasMenu = true;
@@ -211,6 +211,9 @@ $.when(
 						}
 					});
 				}
+				wrapper.find('abbr.allergen').each(function() {
+					$(this).attr('title', allergens[$(this).text()]);
+				});
 				if(hasMenu)
 					wrapper.appendTo(dayElem);
 
