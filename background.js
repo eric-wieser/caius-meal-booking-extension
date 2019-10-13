@@ -1,14 +1,6 @@
 var loggedIn = $.Deferred();
 
 
-function pingAnalytics(d) {
-	var user = $(d).find('.login_footer').first().text();
-	var crsid = /\((.+)\)/.exec(user)[1];
-	var version = chrome.app.getDetails().version;
-
-	$.getJSON('http://meals.efw27.user.srcf.net:8989/ping', {from: crsid, v: version});
-}
-
 var profilePageLoad = loggedIn
 	.then(function() {
 		return $.get('https://www.mealbookings.cai.cam.ac.uk/profile.php');
@@ -24,7 +16,7 @@ var profileLoad = profilePageLoad
 	});
 
 var analyticsLoad = profilePageLoad.then(function(d) {
-	var user = $(d).find('.login_body').first().text();
+	var user = $(d).find('.login_footer').first().text();
 	var crsid = /\((.+)\)/.exec(user)[1];
 	var version = chrome.app.getDetails().version;
 
@@ -102,7 +94,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	loggedIn.resolve();
 
 	analyticsLoad.then(function(payload) {
-		$.getJSON('http://efw27.user.srcf.net:8090/ping', payload);
+		$.getJSON('http://meals.efw27.user.srcf.net:8989/ping', payload);
 	});
 
 	if(request.action == 'getTemplates') {
