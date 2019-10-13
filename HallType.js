@@ -51,9 +51,9 @@ HallType.prototype.loadHalls = function(opts) {
 
 		var parseStatus = function(summary, str) {
 			str = str.trim();
-			if(/\(signup deadline has passed\)/.test(str))
+			if(/signup deadline has passed/i.test(str))
 				summary.status = 'closed';
-			else if(/\(signup has not yet opened\)/.test(str))
+			else if(/signup has not yet opened/i.test(str))
 				summary.status = 'unopened';
 		}
 
