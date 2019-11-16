@@ -61,7 +61,7 @@ var allergensLoad = messagesLoad
 				}
 				return mapping;
 			}).get()
-		);
+		) || {};
 	})
 
 var hallNameLoad = hallPageLoad
