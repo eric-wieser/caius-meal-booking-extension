@@ -46,6 +46,31 @@ var messagesLoad = hallPageLoad
 		return $mainPage.find('.message .announcement');
 	});
 
+var parseAllergens = function(text) {
+	let re = /^([A-Z]+)= (.*)$/gm;
+	let mapping = {}
+	for (let match; (match = re.exec(text)) !== null;) {
+		mapping[match[1]] = match[2]
+	}
+	return mapping;
+};
+var defaultAllergens = `
+C= Celery
+G= Gluten/Cereal
+SF= Crustaceans/Shelfish
+E= Egg
+F= Fish
+L= Lupin
+D= Dairy products/Milk
+MO= Molluscs (mussels, octopus, Snail, scallops)
+M= Mustard
+N= Nuts
+P= Peanuts
+SE= Sesame
+SO= Soya products
+SU= Sulphur Dioxide (wine)
+`;  // taken from https://intranet.cai.cam.ac.uk/eating-caius
+
 var allergensLoad = messagesLoad
 	.then(function($messages) {
 		return Object.merge.apply(
@@ -53,15 +78,9 @@ var allergensLoad = messagesLoad
 			$messages.filter(function() {
 				return $(this).text().includes('allergens');
 			}).map(function() {
-				let re = /^([A-Z]+)= (.*)$/gm;
-				let text = $(this).text();
-				let mapping = {}
-				for (let match; (match = re.exec(text)) !== null;) {
-					mapping[match[1]] = match[2]
-				}
-				return mapping;
+				return parseAllergens($(this).text());
 			}).get()
-		) || {};
+		) || parseAllergens(defaultAllergens);
 	})
 
 var hallNameLoad = hallPageLoad
